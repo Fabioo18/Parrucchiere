@@ -1,0 +1,185 @@
+/* Reset e Stile di base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body e Layout Generale */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fb;
+    height: 100vh;  /* Usa tutta l'altezza della finestra */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centra il contenuto verticalmente */
+    flex-direction: column;
+    overflow: hidden; /* Disabilita lo scroll orizzontale */
+}
+
+/* Contenitore principale */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 800px; /* Limita la larghezza massima */
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    height: 100%; /* Permette al contenitore di occupare tutta l'altezza disponibile */
+    overflow-y: auto; /* Permette lo scroll verticale se necessario */
+}
+
+/* Titolo principale centrato in alto */
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+h1 {
+    font-size: 3em;
+    color: #2c3e50;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    animation: slideIn 1s ease-out;
+}
+
+h1 span {
+    color: #3498db;
+}
+
+/* Animazioni */
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Messaggi di errore e successo */
+.messages p {
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    animation: slideIn 0.5s ease-out;
+}
+
+p.success {
+    color: #27ae60;
+    background-color: rgba(39, 174, 96, 0.1);
+}
+
+p.error {
+    color: #e74c3c;
+    background-color: rgba(231, 76, 60, 0.1);
+}
+
+/* Sezione del Modulo */
+.form-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+label:hover {
+    color: #3498db;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1.1em;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus, button:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
+}
+
+input:hover, select:hover, button:hover {
+    transform: scale(1.03);
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 14px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+/* Link del footer come pulsante */
+footer {
+    text-align: center;
+    margin-top: 40px;
+}
+
+footer a.button {
+    display: inline-block;
+    padding: 14px 40px;
+    background-color: #3498db;
+    color: white;
+    font-size: 1.2em;
+    text-decoration: none;
+    border-radius: 50px;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+footer a.button:hover {
+    background-color: #2980b9;
+    transform: translateY(-3px);
+}
+
+/* Media Query per schermi piccoli */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2.2em;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group button {
+        font-size: 1em;
+        padding: 10px;
+    }
+
+    footer a.button {
+        font-size: 1em;
+        padding: 12px 30px;
+    }
+}

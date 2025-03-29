@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestione Prenotazioni</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Prenotazioni Registrate</h1>
+    <table>
+        <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Data</th>
+            <th>Orario</th>
+            <th>Servizio</th>
+        </tr>
+        {% for prenotazione in prenotazioni %}
+        <tr>
+            <td>{{ prenotazione.nome }}</td>
+            <td>{{ prenotazione.email }}</td>
+            <td>{{ prenotazione.data }}</td>
+            <td>{{ prenotazione.orario }}</td>
+            <td>{{ prenotazione.servizio }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html

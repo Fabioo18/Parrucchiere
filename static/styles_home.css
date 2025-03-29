@@ -1,0 +1,96 @@
+/* Font principali */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    --oro: #cda45e;
+    --nero: #333;
+    --bianco: #ffffff;
+    --grigio: #f4f4f9;
+    --blu: #003366;
+}
+
+/* Body generale */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--grigio);
+    color: var(--nero);
+}
+
+/* Header - immagine di sfondo */
+header {
+    background-image: url('static/salone.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+    padding: 150px 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Sezione Servizi */
+.servizi {
+    background-color: var(--bianco);
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.servizi h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: var(--blu);
+}
+
+.servizio {
+    background-color: #ffffff;
+    padding: 30px;
+    margin: 20px;
+    display: inline-block;
+    width: 300px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    text-align: center;
+}
+
+.servizio:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.servizio h3 {
+    color: var(--blu);
+    font-size: 1.8rem;
+}
+
+/* Bottone principale */
+.btn {
+    background-color: var(--oro);
+    color: black;
+    padding: 18px 40px;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #e6b56d;
+    transform: scale(1.1);
+}
+
+/* Footer */
+footer {
+    background-color: var(--nero);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 1rem;
+    margin-top: 30px;
+}

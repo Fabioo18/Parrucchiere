@@ -1,0 +1,98 @@
+/* Impostazioni generali */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    text-align: center;
+    padding: 40px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Titolo principale */
+h1 {
+    color: #444;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+/* Calendario */
+#calendar {
+    max-width: 100%;
+    width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+/* Hover per il calendario */
+#calendar:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* Eventi del calendario */
+.fc-event {
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+/* Hover per gli eventi */
+.fc-event:hover {
+    background-color: #007bff;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* Tooltip per eventi */
+.fc-event:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 5px 10px;
+    font-size: 0.875rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.fc-event:hover::after {
+    opacity: 1;
+}
+
+/* Responsività per dispositivi mobili */
+@media (max-width: 768px) {
+    body {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    #calendar {
+        width: 100%;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.25rem;
+    }
+
+    #calendar {
+        padding: 15px;
+    }
+}

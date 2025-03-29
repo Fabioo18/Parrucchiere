@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prenotazioni</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles_prenotazioni.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Prenota un appuntamento</h1>
+        </header>
+
+        <!-- Messaggi di errore o successo -->
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="messages" id="message-container">
+                    {% for category, message in messages %}
+                        <p class="{{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Sezione del form -->
+        <section class="form-section">
+            <form action="{{ url_for('prenotazioni') }}" method="POST" id="booking-form">
+                <div class="form-group">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="data">Data:</label>
+                    <input type="date" id="data" name="data" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="orario">Orario:</label>
+                    <input type="time" id="orario" name="orario" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="servizio">Servizio:</label>
+                    <select id="servizio" name="servizio" required>
+                        <option value="Taglio">Taglio</option>
+                        <option value="Colore">Colore</option>
+                        <option value="Piega">Piega</option>
+                    </select>
+                </div>
+
+                <button type="submit">Prenota</button>
+            </form>
+        </section>
+
+        <!-- Footer con link per visualizzare le prenotazioni -->
+        <footer>
+            <a href="{{ url_for('admin_prenotazioni') }}" class="button">Visualizza prenotazioni</a>
+        </footer>
+    </div>
+
+    <!-- Script esterno -->
+    <script src="{{ url_for('static', filename='script_prenotazioni.js') }}"></script>
+</body>
+</html>
