@@ -64,13 +64,26 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="servizio">Servizio:</label>
-                    <select id="servizio" name="servizio" required>
-                        <option value="Taglio">Taglio</option>
-                        <option value="Colore">Colore</option>
-                        <option value="Piega">Piega</option>
-                    </select>
+                    <label>Servizi (seleziona più di uno se necessario):</label><br>
+                
+                    <div class="form-group-checkbox">
+                        <input type="checkbox" id="taglio" name="servizi" value="Taglio">
+                        <label for="taglio">Taglio</label>
+                
+                        <input type="checkbox" id="piega" name="servizi" value="Piega">
+                        <label for="piega">Piega</label>
+                
+                        <input type="checkbox" id="colore" name="servizi" value="Colore">
+                        <label for="colore">Colore</label>
+                
+                        <input type="checkbox" id="trattamento" name="servizi" value="Trattamento">
+                        <label for="trattamento">Trattamento</label>
+                
+                        <input type="checkbox" id="shampoo" name="servizi" value="Shampoo">
+                        <label for="shampoo">Shampoo</label>
+                    </div>
                 </div>
+                
 
                 <button type="submit">Prenota</button>
             </form>

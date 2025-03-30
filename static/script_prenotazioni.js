@@ -26,4 +26,13 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
         console.error("Errore: il div #calendar non esiste!");
     }
+
+    // Aggiunta della validazione per i checkbox dei servizi
+    document.getElementById('booking-form').addEventListener('submit', function(event) {
+        var selectedServices = document.querySelectorAll('input[name="servizi"]:checked');
+        if (selectedServices.length === 0) {
+            event.preventDefault(); // Blocca l'invio del modulo
+            alert("Per favore, seleziona almeno un servizio.");
+        }
+    });
 });

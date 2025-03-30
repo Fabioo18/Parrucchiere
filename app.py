@@ -28,7 +28,7 @@ class Prenotazione(db.Model):
     email = db.Column(db.String(100), nullable=False)
     data = db.Column(db.String(50), nullable=False)
     orario = db.Column(db.String(50), nullable=False)
-    servizio = db.Column(db.String(100), nullable=False)
+    servizio = db.Column(db.String(200), nullable=False)  # Permettiamo fino a 200 caratteri per più servizi
 
 # Creazione del database alla prima esecuzione
 with app.app_context():
@@ -47,7 +47,10 @@ def prenotazioni():
         email = request.form['email']
         data = request.form['data']
         orario = request.form['orario']
-        servizio = request.form['servizio']
+        
+        # Recupera i servizi selezionati, che saranno in una lista
+        servizi = request.form.getlist('servizi')  # getlist restituisce una lista di valori
+        servizi_str = ", ".join(servizi)  # Converti la lista in una stringa separata da virgola
 
         # Controllo se l'orario è già occupato
         prenotazione_esistente = Prenotazione.query.filter_by(data=data, orario=orario).first()
@@ -56,14 +59,14 @@ def prenotazioni():
             return redirect(url_for('prenotazioni'))
 
         # Salva la prenotazione nel database
-        nuova_prenotazione = Prenotazione(nome=nome, email=email, data=data, orario=orario, servizio=servizio)
+        nuova_prenotazione = Prenotazione(nome=nome, email=email, data=data, orario=orario, servizio=servizi_str)
         db.session.add(nuova_prenotazione)
         db.session.commit()
 
         # Invia la mail di conferma
         try:
             msg = Message('Conferma Prenotazione', sender=app.config['MAIL_USERNAME'], recipients=[email, 'lacarbonarafabio18@gmail.com'])
-            msg.body = f"Ciao {nome},\n\nHai prenotato un appuntamento per il servizio: {servizio}.\nData: {data}\nOrario: {orario}\n\nGrazie per aver scelto il nostro salone!\n\nSaluti,\nIl team del salone"
+            msg.body = f"Ciao {nome},\n\nHai prenotato un appuntamento per i seguenti servizi: {servizi_str}.\nData: {data}\nOrario: {orario}\n\nGrazie per aver scelto il nostro salone!\n\nSaluti,\nIl team del salone"
             mail.send(msg)
             flash('Prenotazione effettuata con successo! Controlla la tua email.', 'success')
         except Exception as e:
@@ -72,6 +75,7 @@ def prenotazioni():
         return redirect(url_for('prenotazioni'))
 
     return render_template('prenotazioni.html')
+
 
 @app.route('/api/cliente_prenotazioni')
 def api_cliente_prenotazioni():
@@ -116,7 +120,7 @@ def api_prenotazione(id):
         })
     else:
         return jsonify({'error': 'Prenotazione non trovata'}), 404
-    
+
 @app.route('/api/elimina_prenotazione/<int:id>', methods=['DELETE'])
 def elimina_prenotazione(id):
     prenotazione = Prenotazione.query.get(id)
@@ -126,7 +130,6 @@ def elimina_prenotazione(id):
         return jsonify({'success': 'Prenotazione eliminata con successo!'}), 200
     else:
         return jsonify({'error': 'Prenotazione non trovata'}), 404
-
 
 # Pagina admin per vedere tutte le prenotazioni
 @app.route('/admin/prenotazioni')
