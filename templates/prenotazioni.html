@@ -4,7 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prenotazioni</title>
+
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    
+    <!-- Stili personalizzati -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles_prenotazioni.css') }}">
+
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/it.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("FullCalendar sta caricando...");
+
+            var calendarEl = document.getElementById('calendar');
+            if (calendarEl) {
+                console.log("Trovato il div #calendar!");
+
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    locale: 'it',
+                    selectable: true,
+                    editable: false,
+                    events: '/api/cliente_prenotazioni',
+                    eventColor: "#FF0000",
+                    eventTextColor: "white"
+                });
+
+                calendar.render();
+                console.log("Calendario renderizzato con successo!");
+            } else {
+                console.error("Errore: il div #calendar non esiste!");
+            }
+        });
+    </script>
+
 </head>
 <body>
 
@@ -23,6 +59,9 @@
                 </div>
             {% endif %}
         {% endwith %}
+
+        <!-- Calendario -->
+        <div id="calendar"></div>
 
         <!-- Sezione del form -->
         <section class="form-section">
@@ -66,7 +105,5 @@
         </footer>
     </div>
 
-    <!-- Script esterno -->
-    <script src="{{ url_for('static', filename='script_prenotazioni.js') }}"></script>
 </body>
 </html>

@@ -73,6 +73,21 @@ def prenotazioni():
 
     return render_template('prenotazioni.html')
 
+@app.route('/api/cliente_prenotazioni')
+def api_cliente_prenotazioni():
+    prenotazioni = Prenotazione.query.all()
+    eventi = [
+        {
+            "id": p.id,
+            "title": "Occupato",
+            "start": f"{p.data}T{p.orario}",
+            "color": "#FF0000",
+            "textColor": "white"
+        }
+        for p in prenotazioni
+    ]
+    return jsonify(eventi)
+
 @app.route('/api/prenotazioni')
 def api_prenotazioni():
     prenotazioni = Prenotazione.query.all()
