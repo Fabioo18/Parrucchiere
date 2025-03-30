@@ -96,3 +96,57 @@ h1 {
         padding: 15px;
     }
 }
+
+/* Stili per la modale */
+.modal {
+    display: none; /* Nascondi la modale per default */
+    position: fixed;
+    z-index: 1; /* Fai apparire la modale sopra gli altri contenuti */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4); /* Sfondo trasparente scuro */
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Stile per il contenuto della modale */
+.modal-body {
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+.modal-body p {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.modal-body strong {
+    color: #007bff;
+}

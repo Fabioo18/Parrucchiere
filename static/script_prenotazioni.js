@@ -1,50 +1,29 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const form = document.getElementById('booking-form');
-    const inputs = form.querySelectorAll('input, select');
-    const messageContainer = document.getElementById('message-container');
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("FullCalendar sta caricando...");
 
-    // Animazione dei campi quando sono in focus
-    inputs.forEach(input => {
-        input.addEventListener('focus', function() {
-            input.style.transition = 'all 0.3s ease';
-            input.style.borderColor = '#3498db';
-            input.style.boxShadow = '0 0 8px rgba(52, 152, 219, 0.3)';
-        });
+    var calendarEl = document.getElementById('calendar');
+    if (calendarEl) {
+        console.log("Trovato il div #calendar!");
 
-        input.addEventListener('blur', function() {
-            input.style.borderColor = '#ccc';
-            input.style.boxShadow = 'none';
-        });
-    });
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'it',
+            selectable: true, // Permette la selezione di una data
+            editable: false,
+            events: '/api/cliente_prenotazioni',
+            eventColor: "#FF0000",
+            eventTextColor: "white",
 
-    // Animazione dei messaggi di errore o successo
-    if (messageContainer) {
-        const messages = messageContainer.querySelectorAll('p');
-        messages.forEach(message => {
-            message.style.opacity = '0';
-            message.style.transition = 'opacity 1s ease-in-out';
-
-            // Aggiungi la transizione a tutti i messaggi
-            setTimeout(() => {
-                message.style.opacity = '1';
-            }, 100); // Ritardo per la visibilità
-        });
-    }
-
-    // Validazione del modulo prima dell'invio
-    form.addEventListener('submit', function(event) {
-        let isValid = true;
-        inputs.forEach(input => {
-            if (!input.value.trim()) {
-                isValid = false;
-                input.style.borderColor = '#e74c3c';
-                input.style.boxShadow = '0 0 8px rgba(231, 76, 60, 0.3)';
+            // Quando clicchi su una data, aggiorna il campo data del form
+            dateClick: function(info) {
+                console.log("Hai cliccato su:", info.dateStr);
+                document.getElementById('data').value = info.dateStr;
             }
         });
 
-        if (!isValid) {
-            event.preventDefault(); // Impedisce l'invio se ci sono campi vuoti
-            alert("Per favore, compila tutti i campi.");
-        }
-    });
+        calendar.render();
+        console.log("Calendario renderizzato con successo!");
+    } else {
+        console.error("Errore: il div #calendar non esiste!");
+    }
 });
