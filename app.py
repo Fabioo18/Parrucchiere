@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
+from datetime import datetime, timedelta
 import os
 
 app = Flask(__name__)
@@ -34,6 +35,15 @@ class Prenotazione(db.Model):
 with app.app_context():
     db.create_all()
 
+# Durate dei servizi
+durate_servizi = {
+    "Taglio": 30,      # Durata in minuti per Taglio
+    "Piega": 45,       # Durata in minuti per Piega
+    "Colore": 90,      # Durata in minuti per Colore
+    "Trattamento": 45, # Durata in minuti per Trattamento
+    "Shampoo": 10      # Durata in minuti per Shampoo
+}
+
 # Homepage
 @app.route('/')
 def index():
@@ -52,11 +62,26 @@ def prenotazioni():
         servizi = request.form.getlist('servizi')  # getlist restituisce una lista di valori
         servizi_str = ", ".join(servizi)  # Converti la lista in una stringa separata da virgola
 
-        # Controllo se l'orario è già occupato
-        prenotazione_esistente = Prenotazione.query.filter_by(data=data, orario=orario).first()
-        if prenotazione_esistente:
-            flash('Questo orario è già prenotato. Scegli un altro orario.', 'danger')
-            return redirect(url_for('prenotazioni'))
+        # Calcola la durata totale dei servizi selezionati
+        durata_totale = sum(durate_servizi[servizio] for servizio in servizi)
+
+        # Calcola l'orario di inizio e l'orario di fine
+        esistente_inizio = datetime.strptime(orario, '%H:%M')
+        esistente_fine = esistente_inizio + timedelta(minutes=durata_totale)
+
+        # Controlla se esistono prenotazioni che si sovrappongono
+        prenotazioni_in_giorno = Prenotazione.query.filter_by(data=data).all()
+        
+        for prenotazione in prenotazioni_in_giorno:
+            orario_esistente_inizio = datetime.strptime(prenotazione.orario, '%H:%M')
+            # Aggiungi la durata del servizio alla prenotazione esistente per ottenere l'orario di fine
+            durata_servizio_esistente = sum(durate_servizi[servizio] for servizio in prenotazione.servizio.split(', '))
+            orario_esistente_fine = orario_esistente_inizio + timedelta(minutes=durata_servizio_esistente)
+
+            # Verifica se c'è una sovrapposizione (incluso il caso del minuto esatto)
+            if not (esistente_fine <= orario_esistente_inizio or esistente_inizio >= orario_esistente_fine):
+                flash('Questo orario è già prenotato per un altro servizio. Scegli un altro orario.', 'danger')
+                return redirect(url_for('prenotazioni'))
 
         # Salva la prenotazione nel database
         nuova_prenotazione = Prenotazione(nome=nome, email=email, data=data, orario=orario, servizio=servizi_str)
