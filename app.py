@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 import os
@@ -72,6 +72,46 @@ def prenotazioni():
         return redirect(url_for('prenotazioni'))
 
     return render_template('prenotazioni.html')
+
+@app.route('/api/prenotazioni')
+def api_prenotazioni():
+    prenotazioni = Prenotazione.query.all()
+    eventi = [
+        {
+            "id": p.id,  # Assicurati che l'ID venga passato
+            "title": f"{p.nome} - {p.servizio}",
+            "start": p.data + "T" + p.orario  # Assicurati che la data e l'orario siano nel formato corretto
+        }
+        for p in prenotazioni
+    ]
+    return jsonify(eventi)
+
+@app.route('/api/prenotazione/<int:id>')
+def api_prenotazione(id):
+    prenotazione = Prenotazione.query.get(id)
+    if prenotazione:
+        # Restituisci i dettagli della prenotazione in formato JSON
+        return jsonify({
+            'id': prenotazione.id,
+            'nome': prenotazione.nome,
+            'email': prenotazione.email,
+            'data': prenotazione.data,
+            'orario': prenotazione.orario,
+            'servizio': prenotazione.servizio
+        })
+    else:
+        return jsonify({'error': 'Prenotazione non trovata'}), 404
+    
+@app.route('/api/elimina_prenotazione/<int:id>', methods=['DELETE'])
+def elimina_prenotazione(id):
+    prenotazione = Prenotazione.query.get(id)
+    if prenotazione:
+        db.session.delete(prenotazione)
+        db.session.commit()
+        return jsonify({'success': 'Prenotazione eliminata con successo!'}), 200
+    else:
+        return jsonify({'error': 'Prenotazione non trovata'}), 404
+
 
 # Pagina admin per vedere tutte le prenotazioni
 @app.route('/admin/prenotazioni')
