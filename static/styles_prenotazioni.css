@@ -135,6 +135,13 @@ footer {
     display: block;
 }
 
+.fc-day.indisponibile {
+    background-color: red !important;
+    color: white !important;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
 /* Contenitore delle checkbox */
 .form-group-checkbox {
     display: flex;

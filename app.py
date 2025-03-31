@@ -126,6 +126,9 @@ def api_cliente_prenotazioni():
     prenotazioni = Prenotazione.query.all()
     eventi = []
     
+    # Set di giorni non prenotabili
+    giorni_non_prenotabili = {6, 0}  # Domenica (6) e Lunedì (0)
+
     for p in prenotazioni:
         # Calcola la durata totale dei servizi selezionati
         servizi = p.servizio.split(", ")
@@ -135,20 +138,38 @@ def api_cliente_prenotazioni():
         orario_inizio = datetime.strptime(p.orario, '%H:%M')
         orario_fine = orario_inizio + timedelta(minutes=durata_totale)
 
-        # Imposta il titolo come solo l'orario di fine
         titolo_evento = f"{orario_fine.strftime('%H:%M')}"
 
-        # Aggiungi l'evento con orario di inizio e fine
-        eventi.append({
-            "id": p.id,
-            "title": "-" + " " + titolo_evento,  # Mostra solo l'orario di fine
-            "start": f"{p.data}T{p.orario}",
-            "end": orario_fine.strftime("%Y-%m-%dT%H:%M:%S"),  # Formato ISO per l'ora di fine
-            "color": "#FF0000",  # Colore dell'evento
+        # Aggiungi evento con orario di fine
+        evento = {
+            "id": p.id,  # Assicurati che l'ID venga passato
+            "title": "-" + " " + titolo_evento,  # Titolo con nome e servizio
+            "start": p.data + "T" + p.orario,  # Orario di inizio
+            "end": orario_fine.strftime("%Y-%m-%dT%H:%M:%S"),  # Orario di fine
             "textColor": "white"  # Colore del testo
-        })
+        }
+
+        eventi.append(evento)
+
+    # Aggiungi giorni non prenotabili
+    prenotazioni_per_data = {}
+    for p in prenotazioni:
+        if p.data not in prenotazioni_per_data:
+            prenotazioni_per_data[p.data] = []
+
+    for data in prenotazioni_per_data:
+        if datetime.strptime(data, "%Y-%m-%d").weekday() in giorni_non_prenotabili:
+            eventi.append({
+                "id": "non_prenotabile_" + data,
+                "title": "Giorno non prenotabile",
+                "start": f"{data}T00:00:00",
+                "end": f"{data}T23:59:59",
+                "color": "#FF0000",  # Colore rosso
+                "textColor": "white"
+            })
     
     return jsonify(eventi)
+
 
 @app.route('/api/orari_disponibili/<data>', methods=['GET'])
 def orari_disponibili(data):
