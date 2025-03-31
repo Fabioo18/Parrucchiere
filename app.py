@@ -150,6 +150,42 @@ def api_cliente_prenotazioni():
     
     return jsonify(eventi)
 
+@app.route('/api/orari_disponibili/<data>', methods=['GET'])
+def orari_disponibili(data):
+    # Orari di apertura del salone
+    orari_possibili = []
+    ora_corrente = datetime.strptime("09:00", "%H:%M")  # Inizio giornata lavorativa
+    ora_fine = datetime.strptime("19:00", "%H:%M")  # Fine giornata lavorativa
+
+    # Recupera le prenotazioni esistenti per quella data
+    prenotazioni = Prenotazione.query.filter_by(data=data).all()
+    orari_prenotati = []
+
+    # Genera gli orari prenotati
+    for p in prenotazioni:
+        orario_inizio = datetime.strptime(p.orario, '%H:%M')
+        durata = sum(durate_servizi[servizio] for servizio in p.servizio.split(", "))
+        orario_fine = orario_inizio + timedelta(minutes=durata)
+
+        orari_prenotati.append((orario_inizio.time(), orario_fine.time()))
+
+    # Genera gli slot di 30 minuti tra gli orari di apertura e chiusura
+    while ora_corrente.time() < ora_fine.time():
+        prossimo_slot = (ora_corrente + timedelta(minutes=30)).time()
+        disponibile = True
+
+        # Controlla se l'orario si sovrappone con una prenotazione esistente
+        for inizio, fine in orari_prenotati:
+            if not (prossimo_slot <= inizio or ora_corrente.time() >= fine):
+                disponibile = False
+                break
+
+        if disponibile:
+            orari_possibili.append(ora_corrente.strftime("%H:%M"))
+
+        ora_corrente += timedelta(minutes=30)
+
+    return jsonify(orari_possibili)
 
 @app.route('/api/prenotazioni')
 def api_prenotazioni():
