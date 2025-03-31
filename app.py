@@ -124,30 +124,62 @@ def prenotazioni():
 @app.route('/api/cliente_prenotazioni')
 def api_cliente_prenotazioni():
     prenotazioni = Prenotazione.query.all()
-    eventi = [
-        {
+    eventi = []
+    
+    for p in prenotazioni:
+        # Calcola la durata totale dei servizi selezionati
+        servizi = p.servizio.split(", ")
+        durata_totale = sum(durate_servizi[servizio] for servizio in servizi)
+
+        # Calcola l'orario di inizio della prenotazione
+        orario_inizio = datetime.strptime(p.orario, '%H:%M')
+        orario_fine = orario_inizio + timedelta(minutes=durata_totale)
+
+        # Imposta il titolo come solo l'orario di fine
+        titolo_evento = f"{orario_fine.strftime('%H:%M')}"
+
+        # Aggiungi l'evento con orario di inizio e fine
+        eventi.append({
             "id": p.id,
-            "title": "Occupato",
+            "title": "-" + " " + titolo_evento,  # Mostra solo l'orario di fine
             "start": f"{p.data}T{p.orario}",
-            "color": "#FF0000",
-            "textColor": "white"
-        }
-        for p in prenotazioni
-    ]
+            "end": orario_fine.strftime("%Y-%m-%dT%H:%M:%S"),  # Formato ISO per l'ora di fine
+            "color": "#FF0000",  # Colore dell'evento
+            "textColor": "white"  # Colore del testo
+        })
+    
     return jsonify(eventi)
+
 
 @app.route('/api/prenotazioni')
 def api_prenotazioni():
     prenotazioni = Prenotazione.query.all()
-    eventi = [
-        {
+    eventi = []
+
+    for p in prenotazioni:
+        # Calcola la durata totale dei servizi
+        servizi = p.servizio.split(', ')
+        durata_totale = sum(durate_servizi[servizio] for servizio in servizi)
+
+        # Calcola l'orario di fine
+        orario_inizio = datetime.strptime(p.orario, '%H:%M')
+        orario_fine = orario_inizio + timedelta(minutes=durata_totale)
+
+        titolo_evento = f"{orario_fine.strftime('%H:%M')}"
+
+        # Aggiungi evento con orario di fine
+        evento = {
             "id": p.id,  # Assicurati che l'ID venga passato
-            "title": f"{p.nome} - {p.servizio}",
-            "start": p.data + "T" + p.orario  # Assicurati che la data e l'orario siano nel formato corretto
+            "title": "-" + " " + titolo_evento,  # Titolo con nome e servizio
+            "start": p.data + "T" + p.orario,  # Orario di inizio
+            "end": orario_fine.strftime("%Y-%m-%dT%H:%M:%S"),  # Orario di fine
+            "textColor": "white"  # Colore del testo
         }
-        for p in prenotazioni
-    ]
+
+        eventi.append(evento)
+
     return jsonify(eventi)
+
 
 @app.route('/api/prenotazione/<int:id>')
 def api_prenotazione(id):
