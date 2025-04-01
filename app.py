@@ -355,11 +355,46 @@ def modifica_prenotazione(id):
 def elimina_prenotazione(id):
     prenotazione = Prenotazione.query.get(id)
     if prenotazione:
+        # Salvataggio dei dati per l'email
+        nome_cliente = prenotazione.nome
+        email_cliente = prenotazione.email
+        data_prenotazione = prenotazione.data
+        orario_prenotazione = prenotazione.orario
+        servizio_prenotazione = prenotazione.servizio
+
+        # Rimuove la prenotazione dal database
         db.session.delete(prenotazione)
         db.session.commit()
-        return jsonify({'success': 'Prenotazione eliminata con successo!'}), 200
+
+        # Invia l'email di notifica
+        try:
+            msg = Message(
+                "Cancellazione Prenotazione - Salone di Bellezza",
+                sender=app.config['MAIL_USERNAME'],
+                recipients=[email_cliente]
+            )
+            msg.body = f"""
+            Ciao {nome_cliente},
+
+            La tua prenotazione per i seguenti servizi è stata cancellata:
+
+            - Data: {data_prenotazione}
+            - Orario: {orario_prenotazione}
+            - Servizio: {servizio_prenotazione}
+
+            Se non hai richiesto questa cancellazione, contattaci immediatamente.
+
+            Grazie,
+            Il Team del Salone di Bellezza
+            """
+            mail.send(msg)
+        except Exception as e:
+            return jsonify({'success': 'Prenotazione eliminata, ma errore nell’invio dell’email.', 'error': str(e)}), 500
+
+        return jsonify({'success': 'Prenotazione eliminata con successo! Email inviata.'}), 200
     else:
         return jsonify({'error': 'Prenotazione non trovata'}), 404
+
 
 # Pagina admin per vedere tutte le prenotazioni
 @app.route('/admin/prenotazioni')
