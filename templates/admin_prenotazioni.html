@@ -58,14 +58,15 @@
 
             <div class="form-group">
                 <label>Servizi:</label>
-                <select id="editServizio" name="servizio" multiple class="input-form">
-                    <option value="Taglio">Taglio</option>
-                    <option value="Piega">Piega</option>
-                    <option value="Colore">Colore</option>
-                    <option value="Trattamento">Trattamento</option>
-                    <option value="Shampoo">Shampoo</option>
-                </select>
-            </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="editServizioTaglio" value="Taglio"> <label for="editServizioTaglio">Taglio</label>
+                    <input type="checkbox" id="editServizioPiega" value="Piega"> <label for="editServizioPiega">Piega</label>
+                    <input type="checkbox" id="editServizioColore" value="Colore"> <label for="editServizioColore">Colore</label>
+                    <input type="checkbox" id="editServizioTrattamento" value="Trattamento"> <label for="editServizioTrattamento">Trattamento</label>
+                    <input type="checkbox" id="editServizioShampoo" value="Shampoo"> <label for="editServizioShampoo">Shampoo</label>
+                </div>
+            </div>            
+            
 
             <button type="button" onclick="salvaModifiche()" class="btn btn-success">Salva Modifiche</button>
         </form>

@@ -215,3 +215,69 @@ button.btn {
     background-color: #c82333;
 }
 
+/* Contenitore delle checkbox in orizzontale */
+.checkbox-container {
+    display: flex;
+    flex-wrap: wrap; /* Permette la rottura delle righe se necessario */
+    gap: 15px; /* Distanza tra gli elementi */
+    justify-content: center; /* Centra le checkbox orizzontalmente */
+    max-width: 100%; /* Impedisce che le checkbox superino la larghezza disponibile */
+    overflow: hidden; /* Nasconde eventuali elementi che escono dalla larghezza */
+}
+
+/* Stile per ogni checkbox con la sua etichetta */
+.checkbox-container input[type="checkbox"] {
+    margin-right: 5px; /* Distanza tra la checkbox e il testo */
+    cursor: pointer;
+    width: 20px; /* Imposta una larghezza fissa per la checkbox */
+    height: 20px; /* Imposta un'altezza fissa per la checkbox */
+}
+
+/* Etichette delle checkbox */
+.checkbox-container label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    white-space: nowrap; /* Evita che il testo vada a capo */
+    display: inline-block; /* Consente al testo di adattarsi accanto alla checkbox */
+    max-width: 120px; /* Limita la larghezza delle etichette */
+}
+
+/* Checkbox con stile personalizzato */
+.checkbox-container input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #007bff;
+    border-radius: 4px;
+    background-color: white;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* Checkbox selezionata */
+.checkbox-container input[type="checkbox"]:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+    box-shadow: 0px 0px 6px rgba(0, 123, 255, 0.4);
+}
+
+/* Spunta visibile */
+.checkbox-container input[type="checkbox"]:checked::after {
+    content: '\2713'; /* Unicode per il segno di spunta */
+    font-size: 14px;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Effetto hover */
+.checkbox-container input[type="checkbox"]:hover {
+    border-color: #0056b3;
+}
+

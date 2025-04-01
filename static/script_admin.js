@@ -60,10 +60,19 @@ function modificaPrenotazione() {
 
                 // Seleziona i servizi
                 let serviziSelezionati = data.servizio.split(", ");
-                let opzioni = document.getElementById('editServizio').options;
-                for (let i = 0; i < opzioni.length; i++) {
-                    opzioni[i].selected = serviziSelezionati.includes(opzioni[i].value);
-                }
+                // Reset delle checkbox
+                document.getElementById('editServizioTaglio').checked = false;
+                document.getElementById('editServizioPiega').checked = false;
+                document.getElementById('editServizioColore').checked = false;
+                document.getElementById('editServizioTrattamento').checked = false;
+                document.getElementById('editServizioShampoo').checked = false;
+
+                // Seleziona le checkbox in base ai servizi presenti
+                if (serviziSelezionati.includes('Taglio')) document.getElementById('editServizioTaglio').checked = true;
+                if (serviziSelezionati.includes('Piega')) document.getElementById('editServizioPiega').checked = true;
+                if (serviziSelezionati.includes('Colore')) document.getElementById('editServizioColore').checked = true;
+                if (serviziSelezionati.includes('Trattamento')) document.getElementById('editServizioTrattamento').checked = true;
+                if (serviziSelezionati.includes('Shampoo')) document.getElementById('editServizioShampoo').checked = true;
 
                 // Mostra la modale
                 document.getElementById('editModal').style.display = 'block';
@@ -73,6 +82,7 @@ function modificaPrenotazione() {
         .catch(error => console.error('Errore nel recupero dei dettagli:', error));
 }
 
+
 function salvaModifiche() {
     var eventId = document.getElementById('editForm').getAttribute('data-id');
 
@@ -80,7 +90,14 @@ function salvaModifiche() {
     var email = document.getElementById('editEmail').value;
     var data = document.getElementById('editData').value;
     var orario = document.getElementById('editOrario').value;
-    var servizi = Array.from(document.getElementById('editServizio').selectedOptions).map(option => option.value);
+
+    // Raccogli i servizi selezionati
+    var servizi = [];
+    if (document.getElementById('editServizioTaglio').checked) servizi.push("Taglio");
+    if (document.getElementById('editServizioPiega').checked) servizi.push("Piega");
+    if (document.getElementById('editServizioColore').checked) servizi.push("Colore");
+    if (document.getElementById('editServizioTrattamento').checked) servizi.push("Trattamento");
+    if (document.getElementById('editServizioShampoo').checked) servizi.push("Shampoo");
 
     fetch('/api/modifica_prenotazione/' + eventId, {
         method: 'PUT',
@@ -99,6 +116,7 @@ function salvaModifiche() {
     })
     .catch(error => console.error('Errore nella modifica:', error));
 }
+
 
 
 function closeEditModal() {

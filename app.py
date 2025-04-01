@@ -262,6 +262,14 @@ def modifica_prenotazione(id):
 
     data = request.json
     nuova_data = data.get('data', prenotazione.data)
+
+    # Set di giorni non prenotabili (Domenica e Lunedì)
+    giorni_non_prenotabili = {6, 0}  # Domenica (6) e Lunedì (0)
+
+    # Verifica se la nuova data è domenica o lunedì
+    if datetime.strptime(nuova_data, "%Y-%m-%d").weekday() in giorni_non_prenotabili:
+        return jsonify({'error': 'Non è possibile prenotare per domenica o lunedì.'}), 400
+
     nuovo_orario = data.get('orario', prenotazione.orario)
     nuovo_nome = data.get('nome', prenotazione.nome)
     nuova_email = data.get('email', prenotazione.email)
