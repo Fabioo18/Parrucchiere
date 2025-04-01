@@ -253,6 +253,95 @@ def api_prenotazione(id):
         })
     else:
         return jsonify({'error': 'Prenotazione non trovata'}), 404
+    
+@app.route('/api/modifica_prenotazione/<int:id>', methods=['PUT'])
+def modifica_prenotazione(id):
+    prenotazione = Prenotazione.query.get(id)
+    if not prenotazione:
+        return jsonify({'error': 'Prenotazione non trovata'}), 404
+
+    data = request.json
+    nuova_data = data.get('data', prenotazione.data)
+    nuovo_orario = data.get('orario', prenotazione.orario)
+    nuovo_nome = data.get('nome', prenotazione.nome)
+    nuova_email = data.get('email', prenotazione.email)
+    nuovo_servizio = data.get('servizio', prenotazione.servizio)
+
+    try:
+        # Convertiamo l'orario in formato time() per il confronto
+        orario_prenotazione = datetime.strptime(nuovo_orario, "%H:%M").time()
+        
+        # Controllo se l'orario è dentro l'orario di apertura del salone
+        if orario_prenotazione < ORARIO_APERTURA or orario_prenotazione > ORARIO_CHIUSURA:
+            return jsonify({'error': f'Orario non valido! Il salone è aperto dalle {ORARIO_APERTURA.strftime("%H:%M")} alle {ORARIO_CHIUSURA.strftime("%H:%M")}'}), 400
+    except ValueError:
+        return jsonify({'error': 'Formato orario non valido. Usa HH:MM'}), 400
+
+    # Controllo se l'orario è già occupato
+    prenotazione_esistente = Prenotazione.query.filter(
+        Prenotazione.data == nuova_data,
+        Prenotazione.orario == nuovo_orario,
+        Prenotazione.id != id
+    ).first()
+
+    if prenotazione_esistente:
+        return jsonify({'error': 'Orario già prenotato. Scegli un altro orario.'}), 400
+
+    # **Salvataggio delle vecchie informazioni per l'email**
+    vecchia_prenotazione = {
+        "Nome": prenotazione.nome,
+        "Email": prenotazione.email,
+        "Data": prenotazione.data,
+        "Orario": prenotazione.orario,
+        "Servizio": prenotazione.servizio
+    }
+
+    # Se tutto è valido, aggiorna la prenotazione
+    prenotazione.nome = nuovo_nome
+    prenotazione.email = nuova_email
+    prenotazione.data = nuova_data
+    prenotazione.orario = nuovo_orario
+    prenotazione.servizio = nuovo_servizio
+
+    db.session.commit()
+
+    # **Invio email di conferma modifica**
+    try:
+        msg = Message(
+            subject="Modifica Prenotazione - Salone di Bellezza",
+            sender="tua_email@example.com",
+            recipients=[prenotazione.email]
+        )
+        msg.body = f"""
+        Ciao {prenotazione.nome},
+
+        La tua prenotazione è stata modificata con successo.
+
+        **Dettagli della vecchia prenotazione:**
+        - Nome: {vecchia_prenotazione["Nome"]}
+        - Email: {vecchia_prenotazione["Email"]}
+        - Data: {vecchia_prenotazione["Data"]}
+        - Orario: {vecchia_prenotazione["Orario"]}
+        - Servizio: {vecchia_prenotazione["Servizio"]}
+
+        **Nuovi dettagli della prenotazione:**
+        - Nome: {prenotazione.nome}
+        - Email: {prenotazione.email}
+        - Data: {prenotazione.data}
+        - Orario: {prenotazione.orario}
+        - Servizio: {prenotazione.servizio}
+
+        Se non hai richiesto questa modifica, contattaci subito!
+
+        Grazie,
+        Il Team del Salone di Bellezza
+        """
+        mail.send(msg)
+    except Exception as e:
+        return jsonify({'success': 'Prenotazione modificata, ma errore nell’invio dell’email.', 'error': str(e)}), 500
+
+    return jsonify({'success': 'Prenotazione modificata con successo! Email inviata.'})
+
 
 @app.route('/api/elimina_prenotazione/<int:id>', methods=['DELETE'])
 def elimina_prenotazione(id):

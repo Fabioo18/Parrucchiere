@@ -115,25 +115,27 @@ h1 {
     background-color: #fff;
     margin: 5% auto;
     padding: 20px;
-    border: 1px solid #888;
+    border-radius: 12px;
     width: 80%;
     max-width: 600px;
-    border-radius: 8px;
+    position: relative;  /* Posizionamento relativo per la "X" */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .close {
     color: #aaa;
-    float: right;
     font-size: 28px;
     font-weight: bold;
+    position: absolute;  /* Posizionamento assoluto per tenerla nell'angolo in alto a destra */
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
 }
 
 .close:hover,
 .close:focus {
     color: black;
     text-decoration: none;
-    cursor: pointer;
 }
 
 /* Stile per il contenuto della modale */
@@ -150,3 +152,66 @@ h1 {
 .modal-body strong {
     color: #007bff;
 }
+
+/* Stili per la modale di modifica prenotazione */
+#editModal .modal-content {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form */
+.form-modifica {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.input-form {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.input-form:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0px 0px 8px rgba(0, 123, 255, 0.3);
+}
+
+button.btn {
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
