@@ -69,12 +69,20 @@ def prenotazioni():
         # Converti la data in un oggetto datetime
         data_obj = datetime.strptime(data, "%Y-%m-%d")
 
+        # Recupera la data odierna
+        data_odierna = datetime.today()
+
         # 🚨 Controlla se la data selezionata è una domenica
         if data_obj.weekday() == 6:  # 6 = Domenica
             flash("Non è possibile prenotare la domenica. Scegli un altro giorno.", "danger")
             return redirect(url_for('prenotazioni'))
         if data_obj.weekday() == 0:  # 0 = Lunedi
             flash("Non è possibile prenotare il lunedi. Scegli un altro giorno.", "danger")
+            return redirect(url_for('prenotazioni'))
+
+        # 🚨 Controlla se la data selezionata è prima della data odierna
+        if data_obj < data_odierna:
+            flash("Non è possibile prenotare una data passata. Scegli una data a partire da oggi.", "danger")
             return redirect(url_for('prenotazioni'))
 
         # 🚨 Controlla se l'orario scelto è fuori dagli orari di apertura
@@ -119,6 +127,7 @@ def prenotazioni():
         return redirect(url_for('prenotazioni'))
 
     return render_template('prenotazioni.html')
+
 
 
 @app.route('/api/cliente_prenotazioni')
@@ -263,11 +272,18 @@ def modifica_prenotazione(id):
     data = request.json
     nuova_data = data.get('data', prenotazione.data)
 
+    # Verifica che la nuova data non sia prima di oggi
+    today = datetime.today().date()  # Ottieni la data odierna
+    nuova_data_obj = datetime.strptime(nuova_data, "%Y-%m-%d").date()
+
+    if nuova_data_obj < today:
+        return jsonify({'error': 'Non è possibile prenotare per una data passata. Scegli una data a partire da oggi.'}), 400
+
     # Set di giorni non prenotabili (Domenica e Lunedì)
     giorni_non_prenotabili = {6, 0}  # Domenica (6) e Lunedì (0)
 
     # Verifica se la nuova data è domenica o lunedì
-    if datetime.strptime(nuova_data, "%Y-%m-%d").weekday() in giorni_non_prenotabili:
+    if nuova_data_obj.weekday() in giorni_non_prenotabili:
         return jsonify({'error': 'Non è possibile prenotare per domenica o lunedì.'}), 400
 
     nuovo_orario = data.get('orario', prenotazione.orario)
@@ -317,7 +333,7 @@ def modifica_prenotazione(id):
     try:
         msg = Message(
             subject="Modifica Prenotazione - Salone di Bellezza",
-            sender="tua_email@example.com",
+            sender="tuamail@example.com",
             recipients=[prenotazione.email]
         )
         msg.body = f"""
