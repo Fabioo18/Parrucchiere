@@ -4,7 +4,10 @@ document.addEventListener("DOMContentLoaded", function () {
     var calendarEl = document.getElementById('calendar');
     var orarioSelect = document.getElementById('orario');
     var dataInput = document.getElementById('data');
+    var modal = document.getElementById('booking-modal');  // Modale
+    var closeModal = document.querySelector('.close');     // Pulsante di chiusura del modale
 
+    // Se il calendario è stato trovato nella pagina
     if (calendarEl) {
         console.log("Trovato il div #calendar!");
 
@@ -29,13 +32,11 @@ document.addEventListener("DOMContentLoaded", function () {
             dateClick: function(info) {
                 console.log("Hai cliccato su:", info.dateStr);
 
-                // Se il giorno è indisponibile, blocca la selezione
+                // Verifica se il giorno è domenica o lunedì e impedisci il click
                 if (info.date.getDay() === 0 || info.date.getDay() === 1) {
                     alert("Questo giorno non è disponibile per le prenotazioni.");
-                    return;
+                    return;  // Impedisce l'apertura del modale
                 }
-
-                dataInput.value = info.dateStr;
 
                 // Recupera gli orari disponibili per la data selezionata
                 fetch(`/api/orari_disponibili/${info.dateStr}`)
@@ -43,22 +44,27 @@ document.addEventListener("DOMContentLoaded", function () {
                     .then(orari => {
                         console.log("Orari disponibili:", orari);
 
-                        // Pulisce la select degli orari
-                        orarioSelect.innerHTML = "";
-
+                        // Se non ci sono orari disponibili per quella data, metti il giorno in rosso e impedisci il click
                         if (orari.length === 0) {
-                            var option = document.createElement("option");
-                            option.text = "Nessun orario disponibile";
-                            orarioSelect.appendChild(option);
-
-                            // Colora il giorno in rosso se non ci sono orari disponibili
                             let cella = document.querySelector(`[data-date='${info.dateStr}']`);
-                            if (cella) cella.classList.add('indisponibile');
-
-                            // Disabilita il campo data
-                            dataInput.value = "";
+                            if (cella) {
+                                cella.classList.add('indisponibile');
+                                cella.style.pointerEvents = 'none'; // Impedisce il click
+                            }
                             alert("Questo giorno non ha orari disponibili. Scegli un altro giorno.");
                         } else {
+                            // Rimuovi il rosso se ci sono orari disponibili
+                            let cella = document.querySelector(`[data-date='${info.dateStr}']`);
+                            if (cella) {
+                                cella.classList.remove('indisponibile');
+                                cella.style.pointerEvents = 'auto'; // Rende di nuovo cliccabile
+                            }
+
+                            dataInput.value = info.dateStr;
+                            modal.style.display = "block";  // Mostra il modale
+
+                            // Pulisce la select degli orari
+                            orarioSelect.innerHTML = "";
                             orari.forEach(orario => {
                                 var option = document.createElement("option");
                                 option.value = orario;
@@ -77,12 +83,28 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Errore: il div #calendar non esiste!");
     }
 
-    // Validazione per i servizi selezionati
+    // Gestione del modale: chiusura quando si clicca sulla 'X'
+    closeModal.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // Chiudere il modale cliccando fuori dalla finestra
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // Validazione per i servizi selezionati (form)
     document.getElementById('booking-form').addEventListener('submit', function(event) {
         var selectedServices = document.querySelectorAll('input[name="servizi"]:checked');
+        
+        // Verifica se sono stati selezionati dei servizi
         if (selectedServices.length === 0) {
             event.preventDefault();
             alert("Per favore, seleziona almeno un servizio.");
+        } else {
+            console.log(`Servizi selezionati: ${selectedServices.length}`);
         }
     });
 });

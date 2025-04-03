@@ -40,58 +40,61 @@
         <!-- Calendario -->
         <div id="calendar"></div>
 
-        <!-- Sezione del form -->
-        <section class="form-section">
-            <form action="{{ url_for('prenotazioni') }}" method="POST" id="booking-form">
-                <div class="form-group">
-                    <label for="nome">Nome:</label>
-                    <input type="text" id="nome" name="nome" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="data">Data:</label>
-                    <input type="date" id="data" name="data" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="orario">Orario:</label>
-                    <select id="orario" name="orario" required>
-                        <option value="">Seleziona una data prima</option>
-                    </select>
-                </div>
+        <!-- Modale per il form di prenotazione -->
+        <div id="booking-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Prenota il tuo appuntamento<br><br></h2>
                 
-
-                <div class="form-group">
-                    <label>Servizi (seleziona più di uno se necessario):</label><br>
-                
-                    <div class="form-group-checkbox">
-                        <input type="checkbox" id="taglio" name="servizi" value="Taglio">
-                        <label for="taglio">Taglio</label>
-                
-                        <input type="checkbox" id="piega" name="servizi" value="Piega">
-                        <label for="piega">Piega</label>
-                
-                        <input type="checkbox" id="colore" name="servizi" value="Colore">
-                        <label for="colore">Colore</label>
-                
-                        <input type="checkbox" id="trattamento" name="servizi" value="Trattamento">
-                        <label for="trattamento">Trattamento</label>
-                
-                        <input type="checkbox" id="shampoo" name="servizi" value="Shampoo">
-                        <label for="shampoo">Shampoo</label>
+                <!-- Form di prenotazione -->
+                <form action="{{ url_for('prenotazioni') }}" method="POST" id="booking-form">
+                    <div class="form-group">
+                        <label for="nome">Nome:</label>
+                        <input type="text" id="nome" name="nome" required>
                     </div>
-                </div>                
 
-                <button type="submit">Prenota</button>
-            </form>
-        </section>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
 
-        <!-- Footer con link per visualizzare le prenotazioni -->
+                    <div class="form-group">
+                        <label for="data">Data:</label>
+                        <input type="date" id="data" name="data" required readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="orario">Orario:</label>
+                        <select id="orario" name="orario" required>
+                            <option value="">Seleziona una data prima</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Servizi (seleziona più di uno se necessario):</label><br>
+                        <div class="checkbox-container"> <!-- Usa .checkbox-container per disporre le checkbox orizzontalmente -->
+                            <input type="checkbox" id="taglio" name="servizi" value="Taglio">
+                            <label for="taglio">Taglio</label>
+                    
+                            <input type="checkbox" id="piega" name="servizi" value="Piega">
+                            <label for="piega">Piega</label>
+                    
+                            <input type="checkbox" id="colore" name="servizi" value="Colore">
+                            <label for="colore">Colore</label>
+                    
+                            <input type="checkbox" id="trattamento" name="servizi" value="Trattamento">
+                            <label for="trattamento">Trattamento</label>
+                    
+                            <input type="checkbox" id="shampoo" name="servizi" value="Shampoo">
+                            <label for="shampoo">Shampoo</label>
+                        </div>
+                    </div> 
+
+                    <button type="submit">Prenota</button>
+                </form>
+            </div>
+        </div>
+
         <footer>
             <a href="{{ url_for('admin_prenotazioni') }}" class="button">Visualizza prenotazioni</a>
         </footer>
