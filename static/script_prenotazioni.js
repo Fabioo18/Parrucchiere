@@ -22,7 +22,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Coloriamo i giorni non prenotabili (domenica e lunedì)
             dayCellClassNames: function(arg) {
-                if (arg.date.getDay() === 0 || arg.date.getDay() === 1) { // Domenica = 0, Lunedì = 1
+                const oggi = new Date();
+                oggi.setHours(0, 0, 0, 0);
+                const dataCella = new Date(arg.date);
+                if (
+                    dataCella.getDay() === 0 || // Domenica
+                    dataCella.getDay() === 1 || // Lunedì
+                    dataCella < oggi            // Data passata
+                ) {
                     return 'indisponibile';
                 }
                 return '';
@@ -32,48 +39,76 @@ document.addEventListener("DOMContentLoaded", function () {
             dateClick: function(info) {
                 console.log("Hai cliccato su:", info.dateStr);
 
-                // Verifica se il giorno è domenica o lunedì e impedisci il click
-                if (info.date.getDay() === 0 || info.date.getDay() === 1) {
+                const oggi = new Date();
+                oggi.setHours(0, 0, 0, 0); // Azzeriamo ore/minuti
+                const dataSelezionata = new Date(info.dateStr);
+
+                // Blocco per date passate
+                if (dataSelezionata < oggi) {
+                    alert("Non è possibile selezionare una data passata.");
+                    return;
+                }
+
+                // Blocco per domenica o lunedì
+                if (dataSelezionata.getDay() === 0 || dataSelezionata.getDay() === 1) {
                     alert("Questo giorno non è disponibile per le prenotazioni.");
-                    return;  // Impedisce l'apertura del modale
+                    return;
                 }
 
                 // Recupera gli orari disponibili per la data selezionata
+                // Recupera gli orari disponibili per la data selezionata
                 fetch(`/api/orari_disponibili/${info.dateStr}`)
-                    .then(response => response.json())
-                    .then(orari => {
-                        console.log("Orari disponibili:", orari);
+                .then(response => response.json())
+                .then(orari => {
+                    console.log("Orari disponibili:", orari);
 
-                        // Se non ci sono orari disponibili per quella data, metti il giorno in rosso e impedisci il click
-                        if (orari.length === 0) {
-                            let cella = document.querySelector(`[data-date='${info.dateStr}']`);
-                            if (cella) {
-                                cella.classList.add('indisponibile');
-                                cella.style.pointerEvents = 'none'; // Impedisce il click
-                            }
-                            alert("Questo giorno non ha orari disponibili. Scegli un altro giorno.");
-                        } else {
-                            // Rimuovi il rosso se ci sono orari disponibili
-                            let cella = document.querySelector(`[data-date='${info.dateStr}']`);
-                            if (cella) {
-                                cella.classList.remove('indisponibile');
-                                cella.style.pointerEvents = 'auto'; // Rende di nuovo cliccabile
-                            }
+                    // Rimuoviamo orari troppo vicini all'ora attuale se la data selezionata è oggi
+                    const oggi = new Date();
+                    const dataSelezionata = new Date(info.dateStr);
+                    let orariFiltrati = orari;
 
-                            dataInput.value = info.dateStr;
-                            modal.style.display = "block";  // Mostra il modale
+                    if (dataSelezionata.toDateString() === oggi.toDateString()) {
+                        const oraAttuale = oggi.getHours();
+                        const minutiAttuali = oggi.getMinutes();
 
-                            // Pulisce la select degli orari
-                            orarioSelect.innerHTML = "";
-                            orari.forEach(orario => {
-                                var option = document.createElement("option");
-                                option.value = orario;
-                                option.text = orario;
-                                orarioSelect.appendChild(option);
-                            });
+                        orariFiltrati = orari.filter(orario => {
+                            const [h, m] = orario.split(':').map(Number);
+                            const orarioPrenotazione = new Date();
+                            orarioPrenotazione.setHours(h, m, 0, 0);
+
+                            // Richiediamo almeno 30 minuti di anticipo
+                            return (orarioPrenotazione - oggi) >= 30 * 60 * 1000;
+                        });
+                    }
+
+                    if (orariFiltrati.length === 0) {
+                        let cella = document.querySelector(`[data-date='${info.dateStr}']`);
+                        if (cella) {
+                            cella.classList.add('indisponibile');
+                            cella.style.pointerEvents = 'none';
                         }
-                    })
-                    .catch(error => console.error("Errore nel recupero degli orari:", error));
+                        alert("Non ci sono orari prenotabili disponibili per oggi.");
+                    } else {
+                        let cella = document.querySelector(`[data-date='${info.dateStr}']`);
+                        if (cella) {
+                            cella.classList.remove('indisponibile');
+                            cella.style.pointerEvents = 'auto';
+                        }
+
+                        dataInput.value = info.dateStr;
+                        modal.style.display = "block";
+
+                        orarioSelect.innerHTML = "";
+                        orariFiltrati.forEach(orario => {
+                            var option = document.createElement("option");
+                            option.value = orario;
+                            option.text = orario;
+                            orarioSelect.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => console.error("Errore nel recupero degli orari:", error));
+
             }
         });
 
@@ -98,8 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Validazione per i servizi selezionati (form)
     document.getElementById('booking-form').addEventListener('submit', function(event) {
         var selectedServices = document.querySelectorAll('input[name="servizi"]:checked');
-        
-        // Verifica se sono stati selezionati dei servizi
+
         if (selectedServices.length === 0) {
             event.preventDefault();
             alert("Per favore, seleziona almeno un servizio.");
