@@ -1,184 +1,86 @@
-/* Reset e stile di base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
-}
-
 /* Stile generale della pagina */
 body {
     background-color: #f4f7fb;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
     font-size: 16px;
     color: #333;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
 }
 
-/* Contenitore principale */
-.container {
-    background: #ffffff;
-    width: 100%;
-    max-width: 900px;
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+
+/* Contenitore principale con immagine di sfondo */
+.prenotazioni-container {
+    background-image: url('salone2.jpg'); /* Percorso dell'immagine */
+    background-size: cover; /* Copre l'intera area */
+    background-position: center; /* Centra l'immagine */
+    background-repeat: no-repeat; /* Evita la ripetizione */
+    padding: 20px; /* Riduci il padding interno */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Riduci l'ombra */
+    margin: 0 auto; /* Riduci il margine verticale */
+    padding-top: 20px; /* Aggiungi un po' di padding per distanziare leggermente */
+    max-width: 100%; /* Adatta la larghezza massima */
+    color: rgb(0, 0, 0); /* Colore del testo per contrasto */
+}
+
+/* Sezione titolo */
+.title-section {
     text-align: center;
-    font-size: 1.1em;
+    margin: 30px 0;
 }
 
-/* Titolo */
-header h1 {
-    font-size: 30px;
-    color: #2c3e50;
+.title-section h1 {
+    font-size: 36px;
+    color: #ffffff;
     font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 1px;
     margin-bottom: 20px;
-    animation: slideIn 1s ease-out;
+    border-bottom: 2px solid #cda45e;
+    display: inline-block;
+    padding-bottom: 5px;
 }
 
-/* Animazione titolo */
-@keyframes slideIn {
-    0% {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Sezione messaggi */
+.messages-section {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-/* Sezione del calendario */
-#calendar {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 10px;
-    background: rgb(255, 255, 255);
-    border-radius: 10px;
-    border: 2px solid #888; /* Aggiungi un bordo grigio più scuro */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Ombra più scura per un effetto più marcato */
-}
-
-/* Animazioni */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes slideIn {
-    from { transform: translateY(-20px); }
-    to { transform: translateY(0); }
-}
-
-.fc-daygrid-day-frame {
-    border: 1px solid #ffffff !important;
-}
-
-/* Messaggi di errore/successo */
 .messages {
-    margin-bottom: 15px;
     font-size: 16px;
+    margin: 0 auto;
+    max-width: 600px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .messages .success {
     color: #155724;
     background: #d4edda;
-    padding: 10px;
-    border-radius: 5px;
 }
 
 .messages .error {
     color: #721c24;
     background: #f8d7da;
+}
+
+/* Sezione calendario */
+.calendar-section {
+    margin: 20px auto;
+    text-align: center;
+}
+
+#calendar {
+    width: 90%;
+    max-width: 900px;
+    margin: 0 auto;
     padding: 10px;
-    border-radius: 5px;
-}
-
-/* Form */
-.form-group {
-    margin-bottom: 15px;
-    text-align: left;
-}
-
-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-}
-input, select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-input:focus, select:focus {
-    border-color: #3498db;
-    box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
-}
-
-button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.3s ease-in-out;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-/* Footer */
-footer {
-    margin-top: 20px;
-}
-
-footer .button {
-    display: inline-block;
-    padding: 10px 15px;
-    background: #28a745;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background 0.3s;
-}
-
-footer .button:hover {
-    background: #218838;
-}
-
-/* Checkbox */
-.checkbox-container {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 10px;
-}
-
-.checkbox-container input {
-    display: none;
-}
-
-.checkbox-container label {
-    background: #e0e0e0;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.checkbox-container input:checked + label {
-    background: #007bff;
-    color: white;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Giorno indisponibile */
@@ -187,7 +89,6 @@ footer .button:hover {
     color: #A9A9A9;  /* Colore del testo */
     pointer-events: none; /* Impedisce l'interazione */
 }
-
 
 /* Modale */
 .modal {
@@ -200,23 +101,34 @@ footer .button:hover {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.4);
     animation: fadeIn 0.3s ease-in-out;
+    overflow: auto; /* Aggiunto per gestire contenuti che eccedono lo schermo */
 }
 
 .modal-content {
     background-color: white;
-    padding: 15px;
-    width: 90%;
-    max-width: 520px;
-    margin: 10% auto;
+    padding: 20px;
+    width: 23%;
+    max-width: 500px;
+    margin: 5% auto; /* Centrato verticalmente e orizzontalmente */
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     animation: slideIn 0.3s ease-in-out;
+    overflow: hidden; /* Evita che il contenuto esca fuori */
+}
+
+/* Centrare il titolo del modale */
+.modal-content h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 22px;
+    color: #2c3e50;
+    font-weight: 600;
 }
 
 /* Pulsante di chiusura modale */
 .close {
     float: right;
-    font-size: 24px;
+    font-size: 20px;
     cursor: pointer;
     color: #777;
 }
@@ -225,36 +137,186 @@ footer .button:hover {
     color: #000;
 }
 
-/* Modifica il layout della pagina per dispositivi mobili */
-@media (max-width: 600px) {
-    body {
-        padding: 10px;  /* Ridurre il padding per schermi piccoli */
+/* Checkbox */
+.checkbox-container {
+    display: flex;
+    flex-wrap: wrap; /* Permette di andare a capo se necessario */
+    gap: 10px; /* Spaziatura tra i checkbox */
+    justify-content: center; /* Centra i checkbox orizzontalmente */
+    align-items: center; /* Allinea verticalmente */
+}
+
+.checkbox-container input {
+    display: none;
+}
+
+.checkbox-container label {
+    background: #e0e0e0;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    font-size: 14px;
+    font-weight: bold;
+    color: #2c3e50;
+    text-align: center;
+    min-width: 100px; /* Larghezza minima */
+}
+
+.checkbox-container input:checked + label {
+    background: #cda45e;
+    color: rgb(0, 0, 0);
+    transform: scale(1.05);
+}
+
+/* Form */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+    max-width: 400px;
+    margin: 0 auto 15px auto;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #2c3e50;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus, select:focus {
+    border-color: #cda45e;
+    box-shadow: 0 0 5px rgba(205, 164, 94, 0.5);
+}
+
+button {
+    background-color: #0026ff;
+    color: rgb(255, 255, 255);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+    display: block;
+    margin: 20px auto 0 auto;
+}
+
+button:hover {
+    background-color: #4a59b0;
+    transform: scale(1.05);
+}
+
+/* Media Queries per dispositivi mobili */
+@media (max-width: 768px) {
+    #calendar {
+        width: 100%;
+        font-size: 0.9rem; /* Riduci la dimensione del testo */
     }
 
-    .container {
-        padding: 20px;
+    .modal-content {
+        width: 95%;
+    }
+
+    .form-group {
+        max-width: 100%;
+    }
+
+    button {
+        font-size: 0.9rem; /* Riduci la dimensione del testo nei pulsanti */
+        padding: 8px 12px; /* Riduci il padding */
     }
 
     .checkbox-container {
-        flex-direction: column; /* Cambia a colonna su schermi piccoli */
-        align-items: flex-start;
+        flex-wrap: wrap; /* Permette di andare a capo su schermi piccoli */
     }
 
     .checkbox-container label {
-        margin-right: 0;
-        margin-bottom: 10px;
+        min-width: 80px; /* Riduce la larghezza minima su schermi piccoli */
+    }
+
+    .title-section h1 {
+        font-size: 24px; /* Riduci la dimensione del titolo */
     }
 }
 
-/* Modale responsive: regola la larghezza in base al contenuto */
-@media (max-width: 800px) {
-    .modal-content {
-        width: 90%;
+@media (max-width: 480px) {
+
+    .prenotazioni-container {
+        padding: 5px; /* Riduci ulteriormente il padding */
     }
+
+    .title-section h1 {
+        font-size: 28px;
+    }
+
+    .checkbox-container {
+        flex-direction: column; /* Disposizione verticale per schermi molto piccoli */
+        align-items: center;
+    }
+
+    .checkbox-container label {
+        width: 100%; /* Checkbox a larghezza piena */
+        text-align: center;
+    }
+
+    .modal-content {
+        width: 95%; /* Adatta il modale alla larghezza dello schermo */
+    }
+
+    #calendar {
+        font-size: 0.8rem; /* Riduci ulteriormente la dimensione del testo */
+    }
+
+    
+    
 }
 
-@media (max-width: 600px) {
+/* Media query per schermi molto piccoli (inferiori a 320px) */
+@media (max-width: 320px) {
+    .prenotazioni-container {
+        padding: 10px; /* Riduci la spaziatura interna */
+    }
+
+    .title-section h1 {
+        font-size: 24px; /* Riduci la dimensione del titolo */
+    }
+
+    #calendar {
+        font-size: 0.8rem; /* Riduci la dimensione del testo nel calendario */
+    }
+
     .modal-content {
-        width: 95%;
+        width: 90%; /* Adatta il modale alla larghezza dello schermo */
+    }
+
+    .form-group label {
+        font-size: 0.9rem; /* Riduci la dimensione delle etichette */
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 0.9rem; /* Riduci la dimensione dei campi di input */
+    }
+
+    button {
+        font-size: 0.9rem; /* Riduci la dimensione del pulsante */
+        padding: 8px 12px;
+    }
+
+    .checkbox-container label {
+        font-size: 0.8rem; /* Riduci la dimensione delle etichette dei checkbox */
     }
 }

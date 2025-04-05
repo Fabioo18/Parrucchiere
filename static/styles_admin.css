@@ -1,20 +1,43 @@
 /* Impostazioni generali */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f9;
+    background-color: #f4f4f9; /* Colore di sfondo chiaro */
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
     color: #333;
     text-align: center;
-    padding: 40px;
-    margin: 0;
-    box-sizing: border-box;
 }
 
-/* Titolo principale */
-h1 {
-    color: #444;
-    margin-bottom: 30px;
-    font-size: 2rem;
-    font-weight: 600;
+/* Contenitore principale con immagine di sfondo */
+.prenotazioni-container {
+    background-image: url('salone2.jpg'); /* Percorso dell'immagine */
+    background-size: cover; /* Copre l'intera area */
+    background-position: center; /* Centra l'immagine */
+    background-repeat: no-repeat; /* Evita la ripetizione */
+    padding: 20px; /* Riduci il padding interno */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Riduci l'ombra */
+    margin: 0 auto; /* Riduci il margine verticale */
+    padding-top: 20px; /* Aggiungi un po' di padding per distanziare leggermente */
+    max-width: 100%; /* Adatta la larghezza massima */
+    color: rgb(0, 0, 0); /* Colore del testo per contrasto */
+}
+
+/* Sezione titolo */
+.title-section {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.title-section h1 {
+    font-size: 36px;
+    color: #ffffff;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #cda45e;
+    display: inline-block;
+    padding-bottom: 5px;
 }
 
 /* Calendario */
@@ -30,7 +53,6 @@ h1 {
     transition: box-shadow 0.3s ease-in-out;
 }
 
-/* Hover per il calendario */
 #calendar:hover {
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
@@ -42,7 +64,6 @@ h1 {
     transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-/* Hover per gli eventi */
 .fc-event:hover {
     background-color: #007bff;
     color: white;
@@ -71,32 +92,6 @@ h1 {
     opacity: 1;
 }
 
-/* Responsività per dispositivi mobili */
-@media (max-width: 768px) {
-    body {
-        padding: 20px;
-    }
-
-    h1 {
-        font-size: 1.5rem;
-    }
-
-    #calendar {
-        width: 100%;
-        padding: 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    h1 {
-        font-size: 1.25rem;
-    }
-
-    #calendar {
-        padding: 15px;
-    }
-}
-
 /* Stili per la modale */
 .modal {
     display: none; /* Nascondi la modale per default */
@@ -122,20 +117,35 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.close {
-    color: #aaa;
-    font-size: 28px;
-    font-weight: bold;
-    position: absolute;  /* Posizionamento assoluto per tenerla nell'angolo in alto a destra */
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
+/* Stile per il titolo "Dettagli Prenotazione" */
+.modal-content h3 {
+    font-size: 1.8rem; /* Dimensione del font */
+    font-weight: bold; /* Grassetto */
+    color: #003366; /* Blu scuro elegante */
+    text-align: center; /* Allineamento centrato */
+    margin-bottom: 20px; /* Spaziatura sotto il titolo */
+    letter-spacing: 1px; /* Spaziatura tra le lettere */
+    display: inline-block; /* Per adattare la larghezza al testo */
+    padding-bottom: 5px; /* Spaziatura sotto il testo */
 }
 
+/* Stile per la "X" di chiusura */
+.close {
+    color: #aaa; /* Colore iniziale */
+    font-size: 28px; /* Dimensione del carattere */
+    font-weight: bold; /* Grassetto */
+    position: absolute; /* Posizionamento assoluto */
+    top: 10px; /* Distanza dall'alto */
+    right: 10px; /* Distanza dal lato destro */
+    cursor: pointer; /* Cambia il cursore al passaggio del mouse */
+    transition: color 0.3s ease; /* Transizione per il colore */
+}
+
+/* Hover sulla "X" */
 .close:hover,
 .close:focus {
-    color: black;
-    text-decoration: none;
+    color: black; /* Cambia il colore al passaggio del mouse */
+    text-decoration: none; /* Rimuove eventuali sottolineature */
 }
 
 /* Stile per il contenuto della modale */
@@ -189,21 +199,91 @@ h1 {
     box-shadow: 0px 0px 8px rgba(0, 123, 255, 0.3);
 }
 
-button.btn {
+/* Bottone "Modifica Prenotazione" */
+button.btn-warning {
+    background-color: #f0ad4e; /* Arancione elegante */
+    color: white;
     padding: 12px 20px;
     font-size: 1rem;
+    font-weight: bold;
     border-radius: 8px;
-    cursor: pointer;
     border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Aggiunge un'ombra */
 }
 
-.btn-success {
-    background-color: #28a745;
+button.btn-warning:hover {
+    background-color: #ec971f; /* Arancione più scuro al passaggio del mouse */
+    transform: scale(1.05); /* Leggero ingrandimento */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Ombra più marcata */
+}
+
+button.btn-warning:active {
+    background-color: #d58512; /* Arancione ancora più scuro quando cliccato */
+    transform: scale(0.98); /* Leggero rimpicciolimento */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Riduce l'ombra */
+}
+
+/* Bottone "Elimina Prenotazione" */
+button.btn-danger {
+    background-color: #dc3545; /* Rosso elegante */
     color: white;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Aggiunge un'ombra */
 }
 
-.btn-success:hover {
-    background-color: #218838;
+button.btn-danger:hover {
+    background-color: #c82333; /* Rosso più scuro al passaggio del mouse */
+    transform: scale(1.05); /* Leggero ingrandimento */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Ombra più marcata */
+}
+
+button.btn-danger:active {
+    background-color: #bd2130; /* Rosso ancora più scuro quando cliccato */
+    transform: scale(0.98); /* Leggero rimpicciolimento */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Riduce l'ombra */
+}
+
+/* Allineamento dei pulsanti */
+button {
+    margin: 10px 5px; /* Spaziatura tra i pulsanti */
+    display: inline-block; /* Mantiene i pulsanti in linea */
+}
+
+/* Bottone "Salva Modifiche" */
+button.btn-success {
+    background-color: #4caf50; /* Verde elegante */
+    color: white;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Aggiunge un'ombra */
+    max-width: 200px; /* Limita la larghezza massima */
+    margin: 0 auto; /* Centra il bottone */
+    display: block; /* Necessario per il centramento con `margin: auto` */
+}
+
+button.btn-success:hover {
+    background-color: #016106; /* Verde più scuro al passaggio del mouse */
+    transform: scale(1.05); /* Leggero ingrandimento */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Ombra più marcata */
+}
+
+button.btn-success:active {
+    background-color: #3e8e41; /* Verde ancora più scuro quando cliccato */
+    transform: scale(0.98); /* Leggero rimpicciolimento */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Riduce l'ombra */
 }
 
 .btn-danger {
@@ -215,69 +295,69 @@ button.btn {
     background-color: #c82333;
 }
 
-/* Contenitore delle checkbox in orizzontale */
+/* Checkbox */
 .checkbox-container {
     display: flex;
-    flex-wrap: wrap; /* Permette la rottura delle righe se necessario */
-    gap: 15px; /* Distanza tra gli elementi */
-    justify-content: center; /* Centra le checkbox orizzontalmente */
-    max-width: 100%; /* Impedisce che le checkbox superino la larghezza disponibile */
-    overflow: hidden; /* Nasconde eventuali elementi che escono dalla larghezza */
+    flex-wrap: wrap; /* Permette di andare a capo se necessario */
+    gap: 10px; /* Spaziatura tra i checkbox */
+    justify-content: center; /* Centra i checkbox orizzontalmente */
+    align-items: center; /* Allinea verticalmente */
 }
 
-/* Stile per ogni checkbox con la sua etichetta */
-.checkbox-container input[type="checkbox"] {
-    margin-right: 5px; /* Distanza tra la checkbox e il testo */
-    cursor: pointer;
-    width: 20px; /* Imposta una larghezza fissa per la checkbox */
-    height: 20px; /* Imposta un'altezza fissa per la checkbox */
+.checkbox-container input {
+    display: none;
 }
 
-/* Etichette delle checkbox */
 .checkbox-container label {
-    font-size: 1rem;
-    font-weight: 500;
-    color: #333;
+    background: #e0e0e0;
+    padding: 8px 12px;
+    border-radius: 5px;
     cursor: pointer;
-    white-space: nowrap; /* Evita che il testo vada a capo */
-    display: inline-block; /* Consente al testo di adattarsi accanto alla checkbox */
-    max-width: 120px; /* Limita la larghezza delle etichette */
-}
-
-/* Checkbox con stile personalizzato */
-.checkbox-container input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #007bff;
-    border-radius: 4px;
-    background-color: white;
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-/* Checkbox selezionata */
-.checkbox-container input[type="checkbox"]:checked {
-    background-color: #007bff;
-    border-color: #007bff;
-    box-shadow: 0px 0px 6px rgba(0, 123, 255, 0.4);
-}
-
-/* Spunta visibile */
-.checkbox-container input[type="checkbox"]:checked::after {
-    content: '\2713'; /* Unicode per il segno di spunta */
+    transition: background 0.3s, transform 0.2s;
     font-size: 14px;
-    color: white;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    font-weight: bold;
+    color: #2c3e50;
+    text-align: center;
+    min-width: 100px; /* Larghezza minima */
 }
 
-/* Effetto hover */
-.checkbox-container input[type="checkbox"]:hover {
-    border-color: #0056b3;
+.checkbox-container input:checked + label {
+    background: #cda45e;
+    color: rgb(0, 0, 0);
+    transform: scale(1.05);
 }
 
+/* Responsività per dispositivi mobili */
+@media (max-width: 768px) {
+    body {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    #calendar {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .modal-content {
+        width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    #calendar {
+        padding: 15px;
+    }
+
+    button.btn {
+        font-size: 0.9rem;
+        padding: 10px 15px;
+    }
+}

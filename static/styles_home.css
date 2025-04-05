@@ -96,3 +96,59 @@
     transform: scale(1.1);
 }
 
+/* Media query per schermi medi (tablet) */
+@media (max-width: 1024px) {
+    .servizio {
+        width: 200px; /* Riduci la larghezza dei servizi */
+    }
+
+    .content h1 {
+        font-size: 2.5rem; /* Riduci la dimensione del titolo */
+    }
+
+    .content p {
+        font-size: 1rem; /* Riduci la dimensione del paragrafo */
+    }
+}
+
+/* Media query per schermi piccoli (smartphone) */
+@media (max-width: 768px) {
+    .servizio {
+        width: 100%; /* I servizi occupano tutta la larghezza */
+        margin: 10px 0; /* Riduci il margine */
+    }
+
+    .content {
+        padding: 20px; /* Aggiungi padding interno */
+    }
+
+    .content h1 {
+        font-size: 2rem; /* Riduci ulteriormente la dimensione del titolo */
+    }
+
+    .content p {
+        font-size: 0.9rem; /* Riduci ulteriormente la dimensione del paragrafo */
+    }
+
+    .btn {
+        font-size: 1rem; /* Riduci la dimensione del pulsante */
+        padding: 10px 20px;
+    }
+}
+
+/* Media query per schermi molto piccoli (inferiori a 480px) */
+@media (max-width: 480px) {
+    .content h1 {
+        font-size: 1.8rem; /* Riduci ulteriormente la dimensione del titolo */
+    }
+
+    .content p {
+        font-size: 0.8rem; /* Riduci ulteriormente la dimensione del paragrafo */
+    }
+
+    .btn {
+        font-size: 0.9rem; /* Riduci ulteriormente la dimensione del pulsante */
+        padding: 8px 16px;
+    }
+}
+

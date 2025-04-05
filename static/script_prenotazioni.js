@@ -20,6 +20,12 @@ document.addEventListener("DOMContentLoaded", function () {
             eventColor: "#FF0000",
             eventTextColor: "white",
 
+            headerToolbar: {
+                left: 'prev,next today', // Pulsanti di navigazione a sinistra
+                right: 'title',         // Titolo (mese e anno) al centro
+                center: ''                // Nessun pulsante a destra
+            },
+
             // Coloriamo i giorni non prenotabili (domenica e lunedì)
             dayCellClassNames: function(arg) {
                 const oggi = new Date();

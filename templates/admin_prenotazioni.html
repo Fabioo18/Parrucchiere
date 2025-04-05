@@ -1,24 +1,26 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <title>Calendario Prenotazioni</title>
+{% extends "base.html" %}
+
+{% block head %}
+    <title>Gestione Prenotazioni</title>
     <!-- FullCalendar CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
-
     <!-- Stili personalizzati -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles_admin.css') }}">
-
     <!-- FullCalendar JS -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/it.js"></script>
-
     <!-- Script personalizzato -->
     <script defer src="{{ url_for('static', filename='script_admin.js') }}"></script>
-</head>
-<body>
-    <h1>Prenotazioni</h1>
+{% endblock %}
+
+{% block content %}
+<section class="prenotazioni-container">
+<section class="title-section">
+    <h1>Gestione Prenotazioni</h1>
+</section>
     <div id="calendar"></div>
+
+</section>
 
     <!-- Modale per mostrare i dettagli -->
     <div id="detailModal" class="modal">
@@ -27,55 +29,53 @@
             <div class="modal-body" id="detailContent">
                 <!-- I dettagli verranno caricati qui -->
             </div>
-           <!-- Pulsante Modifica Prenotazione -->
-<button id="editButton" class="btn btn-warning" style="margin-top: 10px;" onclick="modificaPrenotazione()">Modifica Prenotazione</button>
+            <!-- Pulsante Modifica Prenotazione -->
+            <button id="editButton" class="btn btn-warning" style="margin-top: 10px;" onclick="modificaPrenotazione()">Modifica Prenotazione</button>
 
-<!-- Modale per la modifica -->
-<div id="editModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeEditModal()">&times;</span>
-        <h3>Modifica Prenotazione</h3>
-        <form id="editForm" class="form-modifica">
-            <div class="form-group">
-                <label>Nome:</label>
-                <input type="text" id="editNome" name="nome" class="input-form" required>
-            </div>
-            
-            <div class="form-group">
-                <label>Email:</label>
-                <input type="email" id="editEmail" name="email" class="input-form" required>
-            </div>
+            <!-- Modale per la modifica -->
+            <div id="editModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeEditModal()">&times;</span>
+                    <h3>Modifica Prenotazione</h3>
+                    <form id="editForm" class="form-modifica">
+                        <div class="form-group">
+                            <label>Nome:</label>
+                            <input type="text" id="editNome" name="nome" class="input-form" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Email:</label>
+                            <input type="email" id="editEmail" name="email" class="input-form" required>
+                        </div>
 
-            <div class="form-group">
-                <label>Data:</label>
-                <input type="date" id="editData" name="data" class="input-form" required>
-            </div>
+                        <div class="form-group">
+                            <label>Data:</label>
+                            <input type="date" id="editData" name="data" class="input-form" required>
+                        </div>
 
-            <div class="form-group">
-                <label>Orario:</label>
-                <input type="time" id="editOrario" name="orario" class="input-form" required>
-            </div>
+                        <div class="form-group">
+                            <label>Orario:</label>
+                            <input type="time" id="editOrario" name="orario" class="input-form" required>
+                        </div>
 
-            <div class="form-group">
-                <label>Servizi:</label>
-                <div class="checkbox-container">
-                    <input type="checkbox" id="editServizioTaglio" value="Taglio"> <label for="editServizioTaglio">Taglio</label>
-                    <input type="checkbox" id="editServizioPiega" value="Piega"> <label for="editServizioPiega">Piega</label>
-                    <input type="checkbox" id="editServizioColore" value="Colore"> <label for="editServizioColore">Colore</label>
-                    <input type="checkbox" id="editServizioTrattamento" value="Trattamento"> <label for="editServizioTrattamento">Trattamento</label>
-                    <input type="checkbox" id="editServizioShampoo" value="Shampoo"> <label for="editServizioShampoo">Shampoo</label>
+                        <div class="form-group">
+                            <label>Servizi:</label>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="editServizioTaglio" value="Taglio"> <label for="editServizioTaglio">Taglio</label>
+                                <input type="checkbox" id="editServizioPiega" value="Piega"> <label for="editServizioPiega">Piega</label>
+                                <input type="checkbox" id="editServizioColore" value="Colore"> <label for="editServizioColore">Colore</label>
+                                <input type="checkbox" id="editServizioTrattamento" value="Trattamento"> <label for="editServizioTrattamento">Trattamento</label>
+                                <input type="checkbox" id="editServizioShampoo" value="Shampoo"> <label for="editServizioShampoo">Shampoo</label>
+                            </div>
+                        </div>            
+                        
+                        <button type="button" onclick="salvaModifiche()" class="btn btn-success">Salva Modifiche</button>
+                    </form>
                 </div>
-            </div>            
-            
+            </div>
 
-            <button type="button" onclick="salvaModifiche()" class="btn btn-success">Salva Modifiche</button>
-        </form>
-    </div>
-</div>
-
-
+            <!-- Pulsante Elimina Prenotazione -->
             <button id="deleteButton" class="btn btn-danger" style="margin-top: 20px;" onclick="eliminaPrenotazione()">Elimina Prenotazione</button>
         </div>
     </div>
-</body>
-</html>
+{% endblock %}

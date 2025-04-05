@@ -31,6 +31,8 @@ body {
     z-index: 10;
     padding: 10px 0;
     transition: background-color 0.3s ease; /* Transizione del colore di sfondo */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Aggiunge un'ombra sottile */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6)); /* Gradiente */
 }
 
 .header-title {
@@ -97,7 +99,6 @@ body {
 /* Header - Immagine di sfondo con effetto parallax */
 header {
     position: relative;
-    background-image: url('salone.jpg');
     background-size: cover;
     background-position: center;
     color: white;
@@ -160,5 +161,156 @@ footer {
     padding: 20px;
     text-align: center;
     font-size: 1rem;
-    margin-top: 30px;
+}
+
+/* Media query per schermi piccoli (smartphone) */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .header-logo img {
+        max-width: 80px; /* Riduci la dimensione del logo */
+        margin-bottom: 10px;
+    }
+
+    .header-title {
+        font-size: 1.5rem; /* Riduci la dimensione del titolo */
+    }
+
+    .header-nav ul {
+        flex-direction: column; /* Disposizione verticale per i link */
+        align-items: center;
+    }
+
+    .header-nav ul li {
+        margin: 10px 0; /* Aggiungi spazio tra i link */
+    }
+
+    header {
+        height: auto; /* Adatta l'altezza dell'header */
+        padding-top: 20px;
+    }
+
+    .header-content h1 {
+        font-size: 2rem; /* Riduci la dimensione del titolo */
+    }
+
+    .header-content p {
+        font-size: 1rem; /* Riduci la dimensione del paragrafo */
+    }
+
+    footer {
+        font-size: 0.9rem; /* Riduci la dimensione del testo nel footer */
+    }
+}
+
+/* Media query per schermi medi (tablet) */
+@media (max-width: 1024px) {
+    .header-title {
+        font-size: 1.8rem; /* Riduci leggermente la dimensione del titolo */
+    }
+
+    .header-nav ul li a {
+        font-size: 1rem; /* Riduci la dimensione del testo nei link */
+    }
+
+    .header-content h1 {
+        font-size: 3rem; /* Riduci la dimensione del titolo */
+    }
+
+    .header-content p {
+        font-size: 1.2rem; /* Riduci la dimensione del paragrafo */
+    }
+
+    footer {
+        font-size: 0.9rem; /* Riduci la dimensione del testo nel footer */
+    }
+}
+
+/* Media query per schermi piccoli (smartphone) */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .header-logo img {
+        max-width: 80px; /* Riduci la dimensione del logo */
+        margin-bottom: 10px;
+    }
+
+    .header-title {
+        font-size: 1.5rem; /* Riduci la dimensione del titolo */
+    }
+
+    .header-nav ul {
+        flex-direction: column; /* Disposizione verticale per i link */
+        align-items: center;
+    }
+
+    .header-nav ul li {
+        margin: 10px 0; /* Aggiungi spazio tra i link */
+    }
+
+    footer {
+        font-size: 0.8rem; /* Riduci ulteriormente la dimensione del testo nel footer */
+    }
+}
+
+/* Media query per schermi molto piccoli (schermi inferiori a 480px) */
+@media (max-width: 480px) {
+    .header-logo img {
+        max-width: 60px; /* Riduci ulteriormente la dimensione del logo */
+    }
+
+    .header-title {
+        font-size: 1.2rem; /* Riduci la dimensione del titolo */
+    }
+
+    .header-nav ul li a {
+        font-size: 0.9rem; /* Riduci la dimensione del testo nei link */
+    }
+
+    .header-content h1 {
+        font-size: 1.8rem; /* Riduci la dimensione del titolo */
+    }
+
+    .header-content p {
+        font-size: 0.9rem; /* Riduci la dimensione del paragrafo */
+    }
+
+    footer {
+        font-size: 0.8rem; /* Riduci ulteriormente la dimensione del testo nel footer */
+    }
+}
+
+/* Media query per schermi molto piccoli (inferiori a 320px) */
+@media (max-width: 320px) {
+    .header-logo img {
+        max-width: 50px; /* Riduci ulteriormente la dimensione del logo */
+    }
+
+    .header-title {
+        font-size: 1rem; /* Riduci la dimensione del titolo */
+    }
+
+    .header-nav ul li a {
+        font-size: 0.8rem; /* Riduci la dimensione del testo nei link */
+    }
+
+    .header-content h1 {
+        font-size: 1.5rem; /* Riduci la dimensione del titolo */
+    }
+
+    .header-content p {
+        font-size: 0.8rem; /* Riduci la dimensione del paragrafo */
+    }
+
+    footer {
+        font-size: 0.7rem; /* Riduci ulteriormente la dimensione del testo nel footer */
+    }
 }
