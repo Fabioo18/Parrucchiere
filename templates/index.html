@@ -1,43 +1,25 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
+{% extends 'base.html' %}
+
+{% block head %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parrucchiere Elegante</title>
+    <title>Home - Parrucchiere Elegante</title>
+    
+    <!-- Link a CSS specifico per questa pagina -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles_home.css') }}">
+    
+    <!-- Script specifico per questa pagina -->
     <script defer src="{{ url_for('static', filename='script_home.js') }}"></script>
-</head>
-<body>
-    <!-- Barra di navigazione con logo a sinistra e link a destra -->
-    <header>
-        <div class="header-strip">
-            <div class="header-container">
-                <!-- Logo a sinistra -->
-                <div class="header-logo">
-                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
-                </div>
-                <div class="header-title">
-                    <h1>HairStyle</h1>
-                </div>
-                <!-- Navigazione a destra -->
-                <nav class="header-nav">
-                    <ul>
-                        <li><a href="{{ url_for('prenotazioni') }}">Home</a></li>
-                        <li><a href="#">Chi Siamo</a></li>
-                        <li><a href="#">Contatti</a></li>
-                        <li><a href="#">Login</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-        <!-- Contenuto principale dell'header -->
-        <div class="header-content">
-            <h1>Benvenuto da HairStyle</h1>
-            <p>Tagli e colori su misura per te</p>
-            <a href="{{ url_for('prenotazioni') }}" class="btn">Prenota Ora</a>
-        </div>
-    </header>
+{% endblock %}
+
+{% block content %}
+    <!-- Contenuto specifico per la homepage -->
+    <div class="content">
+        <h1>Benvenuto da HairStyle</h1>
+        <p>Tagli e colori su misura per te</p>
+        <a href="{{ url_for('prenotazioni') }}" class="btn">Prenota Ora</a>
+    </div>
 
     <!-- Sezione Servizi -->
     <section class="servizi">
@@ -55,10 +37,4 @@
             <p>Colori brillanti e lucenti per un look fresco e vibrante.</p>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 Parrucchiere Elegante | Tutti i diritti riservati</p>
-    </footer>
-</body>
-</html>
+{% endblock %}

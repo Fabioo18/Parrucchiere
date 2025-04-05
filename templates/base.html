@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    {% block head %}{% endblock %}  <!-- Inserisci il contenuto dell'head qui -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles_base.css') }}"> <!-- Aggiungi il CSS di base -->
+</head>
+<body>
+
+    <header>
+        <div class="header-strip">
+            <div class="header-container">
+                <!-- Logo a sinistra -->
+                <div class="header-logo">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+                </div>
+                <div class="header-title">
+                    <h1>HairStyle</h1>
+                </div>
+                <!-- Navigazione a destra -->
+                <nav class="header-nav">
+                    <ul>
+                        <li><a href="{{ url_for('prenotazioni') }}">Home</a></li>
+                        <li><a href="#">Chi Siamo</a></li>
+                        <li><a href="#">Contatti</a></li>
+                        <li><a href="#">Login</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sezione contenuti variabili -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Parrucchiere Elegante | Tutti i diritti riservati</p>
+    </footer>
+
+</body>
+</html>

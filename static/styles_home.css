@@ -1,176 +1,3 @@
-/* Importazione dei font */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap');
-
-/* Variabili di colore */
-:root {
-    --oro: #cda45e;
-    --nero: #333;
-    --bianco: #ffffff;
-    --grigio: #f4f4f9;
-    --blu: #003366;
-    --verde: #A4C639;
-}
-
-/* Reset e stili di base */
-body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: var(--grigio);
-    color: var(--nero);
-}
-
-/* Barra di navigazione - Trasparente con sfocatura */
-.header-strip {
-    background-color: rgba(0, 0, 0, 0.6); /* Sfondo semi-trasparente */
-    backdrop-filter: blur(10px); /* Aggiunge effetto sfocatura */
-    width: 100%;
-    position: absolute; /* Fissiamo la barra in cima */
-    top: 0;
-    left: 0;
-    z-index: 10;
-    padding: 10px 0;
-    transition: background-color 0.3s ease; /* Transizione del colore di sfondo */
-}
-
-.header-title {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column; /* Se vuoi titolo sopra e logo sotto o viceversa */
-    align-items: center;
-    z-index: 10;
-    text-align: center;
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem; /* Più grande */
-    color: white;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
-}
-
-
-/* Animazione del logo */
-.header-logo img {
-    max-width: 100px; /* Imposta la larghezza massima per il logo */
-    display: flex;
-    padding-left: 20px;
-    justify-content: flex-start;
-    transition: transform 0.3s ease, filter 0.3s ease;
-}
-
-.header-logo img:hover {
-    transform: scale(1.1); /* Ingrandimento del logo */
-    filter: brightness(1.2); /* Aumenta la luminosità quando il logo è sotto hover */
-}
-
-/* Barra di navigazione */
-.header-nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: flex-end;
-    margin: 0;
-    padding: 0;
-}
-
-.header-nav ul li {
-    margin: 0 20px;
-}
-
-.header-nav ul li a {
-    color: white;
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: color 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
-    padding: 5px 0;
-}
-
-.header-nav ul li a:hover {
-    color: var(--oro); /* Cambia il colore del testo */
-    background-color: rgba(255, 255, 255, 0.2); /* Aggiunge un'ombra sottile dietro il link */
-    border-radius: 5px; /* Rende gli angoli arrotondati */
-    transform: scale(1.1); /* Leggero ingrandimento al passaggio del mouse */
-}
-
-/* Header - Immagine di sfondo con effetto parallax */
-header {
-    position: relative;
-    background-image: url('salone.jpg');
-    background-size: cover;
-    background-position: center;
-    color: white;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    overflow: hidden;
-    background-attachment: fixed; /* Effetto parallax */
-    transition: background-position 0.2s ease; /* Transizione quando si scorre */
-}
-
-header::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5); /* Sovrapposizione semitrasparente */
-    z-index: 1;
-}
-
-/* Animazione di apparizione del testo principale */
-.header-content {
-    z-index: 10;
-    font-family: 'Playfair Display', serif;
-    font-size: 3rem;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-    opacity: 0; /* Inizia invisibile */
-    transform: translateY(50px); /* Parte da sotto */
-    animation: fadeIn 1s forwards 0.5s; /* Animazione di ingresso */
-}
-
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.header-content h1 {
-    font-size: 4rem;
-    margin-bottom: 10px;
-}
-
-.header-content p {
-    font-size: 1.4rem;
-    margin-bottom: 20px;
-}
-
-/* Effetto bottone */
-.btn {
-    background-color: var(--oro);
-    color: black;
-    padding: 18px 40px;
-    text-decoration: none;
-    border-radius: 50px;
-    font-size: 1.4rem;
-    font-weight: bold;
-    letter-spacing: 1px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-.btn:hover {
-    background-color: #e6b56d;
-    transform: scale(1.1);
-}
-
-
 /* Sezione Servizi */
 .servizi {
     background-color: var(--bianco);
@@ -217,13 +44,55 @@ header::after {
     margin-bottom: 10px;
 }
 
-
-/* Footer */
-footer {
-    background-color: var(--nero);
-    color: white;
-    padding: 20px;
+.content {
+    z-index: 10;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transform: translateY(50px);
+    animation: fadeIn 1s forwards 0.5s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: calc(100vh - 100px); /* Imposta l'altezza per occupare l'intera finestra meno la navbar */
     text-align: center;
-    font-size: 1rem;
-    margin-top: 30px;
+    padding-top: 100px;
+    background-image: url('salone2.jpg');
+    background-size: cover; /* L'immagine copre tutto il contenitore */
+    background-position: center; /* Centra l'immagine */
+    background-repeat: no-repeat; /* Evita che l'immagine si ripeta */
 }
+
+.content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 10px;
+    color: white; /* Imposta il colore del testo a bianco */
+}
+
+.content p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: white; /* Imposta il colore del testo a bianco */
+}
+
+/* Effetto bottone */
+.btn {
+    background-color: var(--oro);
+    color: black;
+    padding: 18px 40px;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #e6b56d;
+    transform: scale(1.1);
+}
+
