@@ -72,7 +72,6 @@ body {
 
 /* Tooltip per eventi */
 .fc-event:hover::after {
-    content: attr(data-tooltip);
     position: absolute;
     bottom: 110%;
     left: 50%;

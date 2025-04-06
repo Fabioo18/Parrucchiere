@@ -31,24 +31,45 @@ document.addEventListener("DOMContentLoaded", function() {
 
     window.addEventListener('scroll', animaServizi);
     animaServizi(); // Chiamato una volta per vedere subito le animazioni al caricamento
-});
 
-document.addEventListener("DOMContentLoaded", () => {
-    const popup = document.getElementById("popup");
-    const closePopupButton = document.getElementById("close-popup");
+    // Gestione dei messaggi flash
+    const messageContainer = document.getElementById("message-container");
+if (messageContainer) {
+    const messages = messageContainer.querySelectorAll("p");
+    messages.forEach(message => {
+        const category = message.dataset.category;
+        const text = message.innerHTML; // Usa innerHTML per mantenere i tag HTML
 
-    if (popup) {
-        // Mostra il popup
-        popup.classList.add("show");
-
-        // Chiudi il popup quando si clicca sul pulsante "Chiudi"
-        closePopupButton.addEventListener("click", () => {
-            popup.classList.remove("show");
+        // Mostra il popup personalizzato con SweetAlert2
+        Swal.fire({
+            title: category === 'success' ? 'Successo!' : 'Attenzione!',
+            html: text, // Usa html invece di text per supportare i tag HTML
+            icon: category === 'success' ? 'success' : 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6',
+            timer: 5000, // Chiude automaticamente dopo 5 secondi
+            timerProgressBar: true
         });
-
-        // Chiudi il popup automaticamente dopo 5 secondi
-        setTimeout(() => {
-            popup.classList.remove("show");
-        }, 5000);
-    }
+    });
+}
 });
+
+// document.addEventListener("DOMContentLoaded", () => {
+//     const popup = document.getElementById("popup");
+//     const closePopupButton = document.getElementById("close-popup");
+
+//     if (popup) {
+//         // Mostra il popup
+//         popup.classList.add("show");
+
+//         // Chiudi il popup quando si clicca sul pulsante "Chiudi"
+//         closePopupButton.addEventListener("click", () => {
+//             popup.classList.remove("show");
+//         });
+
+//         // Chiudi il popup automaticamente dopo 5 secondi
+//         setTimeout(() => {
+//             popup.classList.remove("show");
+//         }, 5000);
+//     }
+// });

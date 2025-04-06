@@ -7,28 +7,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles_home.css') }}">
     <script defer src="{{ url_for('static', filename='script_home.js') }}"></script>
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 {% endblock %}
 
 {% block content %}
-    <!-- Messaggi flash -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div id="popup" class="popup">
-                <div class="popup-content">
-                    {% for category, message in messages %}
-                        <p class="{{ category }}">{{ message|safe }}</p> <!-- Usa il filtro |safe -->
-                    {% endfor %}
-                    <button id="close-popup" class="btn">Chiudi</button>
-                </div>
-            </div>
-        {% endif %}
-    {% endwith %}
+          <!-- Sezione messaggi -->
+          <section class="messages-section" style="display: none;">
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    <div class="messages" id="message-container">
+                        {% for category, message in messages %}
+                            <p class="{{ category }}" data-category="{{ category }}">{{ message|safe }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </section>
 
     <!-- Contenuto comune a tutti gli utenti -->
     <div class="content">
-        <h1>Benvenuto da HairStyle</h1>
-        <p>Tagli e colori su misura per te</p>
-        <a href="{{ url_for('prenotazioni') }}" class="btn">Prenota Ora</a>
+        {% if current_user.is_authenticated and current_user.role == 'parrucchiere' %}
+            <h1>Gestione Prenotazioni</h1>
+            <p>Accedi alla gestione delle prenotazioni per il salone.</p>
+            <a href="{{ url_for('admin_prenotazioni') }}" class="btn">Gestione Prenotazioni</a>
+        {% else %}
+            <h1>Benvenuto da HairStyle</h1>
+            <p>Tagli e colori su misura per te</p>
+            <a href="{{ url_for('prenotazioni') }}" class="btn">Prenota Ora</a>
+        {% endif %}
     </div>
 
     <!-- Sezione Servizi -->

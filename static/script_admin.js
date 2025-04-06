@@ -19,7 +19,12 @@ function showEventDetail(eventId) {
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                alert('Errore nel recupero della prenotazione: ' + data.error);
+                Swal.fire({
+                    title: 'Errore',
+                    text: 'Errore nel recupero della prenotazione: ' + data.error,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
             } else {
                 var detailContent = `
                     <h3>Dettagli Prenotazione</h3>
@@ -35,7 +40,12 @@ function showEventDetail(eventId) {
             }
         })
         .catch(error => {
-            console.error('Errore nel recupero dei dettagli:', error);
+            Swal.fire({
+                title: 'Errore',
+                text: 'Errore nel recupero dei dettagli: ' + error,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
         });
 }
 
@@ -43,7 +53,12 @@ function modificaPrenotazione() {
     var eventId = document.getElementById('deleteButton').getAttribute('data-id'); // Ottieni l'ID
 
     if (!eventId) {
-        alert('Errore: ID non valido.');
+        Swal.fire({
+            title: 'Errore',
+            text: 'Errore: ID non valido.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
         return;
     }
 
@@ -51,7 +66,12 @@ function modificaPrenotazione() {
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                alert('Errore nel recupero della prenotazione: ' + data.error);
+                Swal.fire({
+                    title: 'Errore',
+                    text: 'Errore nel recupero della prenotazione: ' + data.error,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
             } else {
                 document.getElementById('editNome').value = data.nome;
                 document.getElementById('editEmail').value = data.email;
@@ -79,9 +99,13 @@ function modificaPrenotazione() {
                 document.getElementById('editForm').setAttribute('data-id', eventId);
             }
         })
-        .catch(error => console.error('Errore nel recupero dei dettagli:', error));
+        .catch(error => Swal.fire({
+            title: 'Errore',
+            text: 'Errore nel recupero dei dettagli: ' + error,
+            icon: 'error',
+            confirmButtonText: 'OK'
+        }));
 }
-
 
 function salvaModifiche() {
     var eventId = document.getElementById('editForm').getAttribute('data-id');
@@ -107,29 +131,46 @@ function salvaModifiche() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Prenotazione modificata con successo!');
-            closeEditModal();
-            location.reload();
+            Swal.fire({
+                title: 'Successo',
+                text: 'Prenotazione modificata con successo!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                closeEditModal();
+                location.reload();
+            });
         } else {
-            alert('Errore: ' + data.error); // Messaggio se l'orario è già occupato
+            Swal.fire({
+                title: 'Errore',
+                text: 'Errore: ' + data.error,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
         }
     })
-    .catch(error => console.error('Errore nella modifica:', error));
+    .catch(error => Swal.fire({
+        title: 'Errore',
+        text: 'Errore nella modifica: ' + error,
+        icon: 'error',
+        confirmButtonText: 'OK'
+    }));
 }
-
-
 
 function closeEditModal() {
     document.getElementById('editModal').style.display = 'none';
 }
 
-
-
 function eliminaPrenotazione() {
     var eventId = document.getElementById('deleteButton').getAttribute('data-id'); // Ottieni l'ID dal pulsante
 
     if (!eventId) {
-        alert('Errore: ID non valido.');
+        Swal.fire({
+            title: 'Errore',
+            text: 'Errore: ID non valido.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
         return;
     }
 
@@ -139,16 +180,30 @@ function eliminaPrenotazione() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Prenotazione eliminata con successo!');
-            closeModal(); // Chiudi la modale
-            location.reload(); // Ricarica la pagina per aggiornare il calendario
+            Swal.fire({
+                title: 'Successo',
+                text: 'Prenotazione eliminata con successo!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                closeModal(); // Chiudi la modale
+                location.reload(); // Ricarica la pagina per aggiornare il calendario
+            });
         } else {
-            alert('Errore nella cancellazione della prenotazione: ' + data.error);
+            Swal.fire({
+                title: 'Errore',
+                text: 'Errore nella cancellazione della prenotazione: ' + data.error,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
         }
     })
-    .catch(error => {
-        console.error('Errore durante l\'eliminazione:', error);
-    });
+    .catch(error => Swal.fire({
+        title: 'Errore',
+        text: 'Errore durante l\'eliminazione: ' + error,
+        icon: 'error',
+        confirmButtonText: 'OK'
+    }));
 }
 
 function closeModal() {

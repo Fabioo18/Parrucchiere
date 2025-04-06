@@ -67,7 +67,7 @@ class User(UserMixin, db.Model):
 
 @login_manager.user_loader
 def load_user(user_id):
-    return db.session.get(User, int(user_id))  # Usa Session.get() invece di Query.get()
+    return db.session.get(User, int(user_id))  # Assicurati che carichi correttamente l'utente
 
 # Modello database per le prenotazioni
 class Prenotazione(db.Model):
@@ -81,6 +81,10 @@ class Prenotazione(db.Model):
 # Creazione del database alla prima esecuzione
 with app.app_context():
     db.create_all()
+
+# with app.app_context():
+#     user = User.query.filter_by(email='admin@salone.it').first()
+#     print(f"Ruolo nel database: {user.role}")
 
 # Durate dei servizi
 durate_servizi = {
@@ -150,7 +154,7 @@ def login():
         # Controlla se l'utente esiste e se la password è valida
         if user and user.password and bcrypt.check_password_hash(user.password, password):
             login_user(user)
-            flash(f'Accesso effettuato con successo!<br><br>Benvenuto, {user.name}.', 'success')
+            flash(f'Accesso effettuato con successo!<br><br>Ciao, {user.name}.', 'success')
             return redirect(url_for('index'))
         else:
             # Mostra un messaggio di errore se le credenziali non sono valide
@@ -618,7 +622,7 @@ def elimina_prenotazione(id):
 @app.route('/admin/prenotazioni')
 @login_required
 def admin_prenotazioni():
-    if current_user.role != 'admin':
+    if current_user.role != 'parrucchiere':
         flash('Accesso negato. Solo gli admin possono accedere a questa pagina.', 'danger')
         return redirect(url_for('index'))
 
