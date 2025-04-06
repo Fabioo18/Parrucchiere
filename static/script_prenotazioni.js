@@ -51,17 +51,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Blocco per date passate
                 if (dataSelezionata < oggi) {
-                    alert("Non è possibile selezionare una data passata.");
+                    Swal.fire({
+                        title: 'Errore',
+                        text: "Non è possibile selezionare una data passata.",
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                     return;
                 }
 
                 // Blocco per domenica o lunedì
                 if (dataSelezionata.getDay() === 0 || dataSelezionata.getDay() === 1) {
-                    alert("Questo giorno non è disponibile per le prenotazioni.");
+                    Swal.fire({
+                        title: 'Errore',
+                        text: "Questo giorno non è disponibile per le prenotazioni.",
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                     return;
                 }
 
-                // Recupera gli orari disponibili per la data selezionata
                 // Recupera gli orari disponibili per la data selezionata
                 fetch(`/api/orari_disponibili/${info.dateStr}`)
                 .then(response => response.json())
@@ -93,7 +102,12 @@ document.addEventListener("DOMContentLoaded", function () {
                             cella.classList.add('indisponibile');
                             cella.style.pointerEvents = 'none';
                         }
-                        alert("Non ci sono orari prenotabili disponibili per oggi.");
+                        Swal.fire({
+                            title: 'Nessun orario disponibile',
+                            text: "Non ci sono orari prenotabili disponibili per oggi.",
+                            icon: 'info',
+                            confirmButtonText: 'OK'
+                        });
                     } else {
                         let cella = document.querySelector(`[data-date='${info.dateStr}']`);
                         if (cella) {
@@ -113,7 +127,15 @@ document.addEventListener("DOMContentLoaded", function () {
                         });
                     }
                 })
-                .catch(error => console.error("Errore nel recupero degli orari:", error));
+                .catch(error => {
+                    console.error("Errore nel recupero degli orari:", error);
+                    Swal.fire({
+                        title: 'Errore',
+                        text: "Si è verificato un errore nel recupero degli orari.",
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                });
 
             }
         });
@@ -142,9 +164,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (selectedServices.length === 0) {
             event.preventDefault();
-            alert("Per favore, seleziona almeno un servizio.");
+            Swal.fire({
+                title: 'Errore',
+                text: "Per favore, seleziona almeno un servizio.",
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
         } else {
             console.log(`Servizi selezionati: ${selectedServices.length}`);
         }
     });
+
+    // Gestione dei messaggi flash
+    const messageContainer = document.getElementById("message-container");
+    if (messageContainer) {
+        const messages = messageContainer.querySelectorAll("p");
+        messages.forEach(message => {
+            const category = message.dataset.category;
+            const text = message.textContent;
+
+            // Mostra il popup personalizzato con SweetAlert2
+            Swal.fire({
+                title: category === 'success' ? 'Successo!' : 'Attenzione!',
+                text: text,
+                icon: category === 'success' ? 'success' : 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6',
+                timer: 5000, // Chiude automaticamente dopo 5 secondi
+                timerProgressBar: true
+            });
+        });
+    }
 });

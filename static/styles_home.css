@@ -1,53 +1,59 @@
 /* Sezione Servizi */
 .servizi {
     background-color: var(--bianco);
-    padding: 60px 20px;
+    padding: 3.75rem 1.25rem; /* 60px 20px */
     text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.25rem; /* 20px */
 }
 
 .servizi h2 {
     font-family: 'Playfair Display', serif;
-    font-size: 2.5rem;
+    font-size: clamp(1.8rem, 2.5vw, 2.5rem);
     color: var(--blu);
-    margin-bottom: 40px;
+    margin-bottom: 2.5rem;
+    width: 100%;
 }
 
 /* Animazione dei servizi */
 .servizio {
     background-color: var(--bianco);
-    padding: 30px;
-    margin: 20px;
+    padding: 1.875rem;
+    margin: 0.625rem;
     display: inline-block;
-    width: 250px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 15.625rem; /* 250px */
+    border-radius: 0.625rem;
+    box-shadow: 0 0.3125rem 0.9375rem rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     text-align: center;
-    opacity: 0; /* Gli elementi sono invisibili all'inizio */
-    transform: translateY(50px); /* Partono dal basso */
+    opacity: 0;
+    transform: translateY(50px);
 }
 
-/* Aggiungi visibilità e animazione al diventare visibile */
 .servizio.visibile {
     opacity: 1;
     transform: translateY(0);
 }
 
 .servizio:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-0.625rem);
+    box-shadow: 0 0.625rem 1.25rem rgba(0, 0, 0, 0.2);
 }
 
 .servizio h3 {
     color: var(--blu);
-    font-size: 1.8rem;
-    margin-bottom: 10px;
+    font-size: clamp(1.3rem, 2vw, 1.8rem);
+    margin-bottom: 0.625rem;
 }
 
+/* Content Hero */
 .content {
     z-index: 10;
     font-family: 'Playfair Display', serif;
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 5vw, 2.5rem);
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
     opacity: 0;
     transform: translateY(50px);
@@ -56,38 +62,38 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: calc(100vh - 100px); /* Imposta l'altezza per occupare l'intera finestra meno la navbar */
+    height: calc(100vh - 100px);
     text-align: center;
-    padding-top: 100px;
+    padding: 2rem 1.25rem;
     background-image: url('salone2.jpg');
-    background-size: cover; /* L'immagine copre tutto il contenitore */
-    background-position: center; /* Centra l'immagine */
-    background-repeat: no-repeat; /* Evita che l'immagine si ripeta */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .content h1 {
-    font-size: 3.5rem;
-    margin-bottom: 10px;
-    color: white; /* Imposta il colore del testo a bianco */
+    font-size: clamp(1.8rem, 6vw, 3.5rem);
+    margin-bottom: 0.625rem;
+    color: white;
 }
 
 .content p {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-    color: white; /* Imposta il colore del testo a bianco */
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
+    margin-bottom: 1.25rem;
+    color: white;
 }
 
 /* Effetto bottone */
 .btn {
     background-color: var(--oro);
     color: black;
-    padding: 18px 40px;
+    padding: 1.125rem 2.5rem;
     text-decoration: none;
     border-radius: 50px;
-    font-size: 1.4rem;
+    font-size: clamp(1rem, 2vw, 1.4rem);
     font-weight: bold;
     letter-spacing: 1px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0.3125rem 0.9375rem rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
@@ -115,19 +121,19 @@
 
 .popup-content {
     background: white;
-    padding: 20px;
-    border-radius: 8px;
+    padding: 1.25rem;
+    border-radius: 0.5rem;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
 }
 
 .popup .btn {
-    margin-top: 10px;
-    padding: 10px 20px;
+    margin-top: 0.625rem;
+    padding: 0.625rem 1.25rem;
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 0.3125rem;
     cursor: pointer;
 }
 
@@ -140,59 +146,16 @@
     opacity: 1;
 }
 
-/* Media query per schermi medi (tablet) */
-@media (max-width: 1024px) {
-    .servizio {
-        width: 200px; /* Riduci la larghezza dei servizi */
-    }
-
-    .content h1 {
-        font-size: 2.5rem; /* Riduci la dimensione del titolo */
-    }
-
-    .content p {
-        font-size: 1rem; /* Riduci la dimensione del paragrafo */
-    }
-}
-
-/* Media query per schermi piccoli (smartphone) */
+/* Media query – perfezionamenti */
 @media (max-width: 768px) {
+    .servizi {
+        flex-direction: column;
+        align-items: center;
+    }
+
     .servizio {
-        width: 100%; /* I servizi occupano tutta la larghezza */
-        margin: 10px 0; /* Riduci il margine */
-    }
-
-    .content {
-        padding: 20px; /* Aggiungi padding interno */
-    }
-
-    .content h1 {
-        font-size: 2rem; /* Riduci ulteriormente la dimensione del titolo */
-    }
-
-    .content p {
-        font-size: 0.9rem; /* Riduci ulteriormente la dimensione del paragrafo */
-    }
-
-    .btn {
-        font-size: 1rem; /* Riduci la dimensione del pulsante */
-        padding: 10px 20px;
+        max-width: 100%;
+        width: 100%;
+        margin: 0.625rem 0;
     }
 }
-
-/* Media query per schermi molto piccoli (inferiori a 480px) */
-@media (max-width: 480px) {
-    .content h1 {
-        font-size: 1.8rem; /* Riduci ulteriormente la dimensione del titolo */
-    }
-
-    .content p {
-        font-size: 0.8rem; /* Riduci ulteriormente la dimensione del paragrafo */
-    }
-
-    .btn {
-        font-size: 0.9rem; /* Riduci ulteriormente la dimensione del pulsante */
-        padding: 8px 16px;
-    }
-}
-

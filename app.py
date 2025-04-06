@@ -7,6 +7,8 @@ from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.contrib.facebook import make_facebook_blueprint
 from datetime import datetime, timedelta
 from sqlalchemy.exc import SQLAlchemyError
+from dotenv import load_dotenv
+load_dotenv(dotenv_path='file.env')
 import requests
 import os
 
@@ -35,6 +37,7 @@ app.config['MAIL_PASSWORD'] = 'teag qlhq neuo sfsn'  # Password generata per le 
 mail = Mail(app)
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # Consenti HTTP per OAuth in locale
+
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
@@ -250,14 +253,18 @@ def google_login():
 
 # Pagina prenotazioni
 @app.route('/prenotazioni', methods=['GET', 'POST'])
-@login_required
 def prenotazioni():
     if request.method == 'POST':
-        nome = current_user.name
-        email = current_user.email
+        nome = request.form.get('nome') or (current_user.name if current_user.is_authenticated else None)
+        email = request.form.get('email') or (current_user.email if current_user.is_authenticated else None)
         data = request.form['data']
         orario = request.form['orario']
         
+        # Controlla se nome ed email sono forniti
+        if not nome or not email:
+            flash("Nome ed email sono obbligatori per effettuare una prenotazione.", "danger")
+            return redirect(url_for('prenotazioni'))
+
         # Recupera i servizi selezionati
         servizi = request.form.getlist('servizi')
         servizi_str = ", ".join(servizi)
@@ -268,20 +275,17 @@ def prenotazioni():
         # Recupera la data odierna
         data_odierna = datetime.today()
 
-        # 🚨 Controlla se la data selezionata è una domenica
-        if data_obj.weekday() == 6:  # 6 = Domenica
-            flash("Non è possibile prenotare la domenica. Scegli un altro giorno.", "danger")
-            return redirect(url_for('prenotazioni'))
-        if data_obj.weekday() == 0:  # 0 = Lunedi
-            flash("Non è possibile prenotare il lunedi. Scegli un altro giorno.", "danger")
+        # Controlla se la data selezionata è una domenica o lunedì
+        if data_obj.weekday() in {6, 0}:  # 6 = Domenica, 0 = Lunedì
+            flash("Non è possibile prenotare la domenica o il lunedì. Scegli un altro giorno.", "danger")
             return redirect(url_for('prenotazioni'))
 
-        # 🚨 Controlla se la data selezionata è prima della data odierna
+        # Controlla se la data selezionata è prima della data odierna
         if data_obj < data_odierna:
             flash("Non è possibile prenotare una data passata. Scegli una data a partire da oggi.", "danger")
             return redirect(url_for('prenotazioni'))
 
-        # 🚨 Controlla se l'orario scelto è fuori dagli orari di apertura
+        # Controlla se l'orario scelto è fuori dagli orari di apertura
         orario_obj = datetime.strptime(orario, "%H:%M").time()
         if orario_obj < ORARIO_APERTURA or orario_obj > ORARIO_CHIUSURA:
             flash("L'orario selezionato è fuori dagli orari di apertura del salone (09:00 - 19:00).", "danger")
@@ -322,7 +326,11 @@ def prenotazioni():
 
         return redirect(url_for('prenotazioni'))
 
-    return render_template('prenotazioni.html', nome=current_user.name, email=current_user.email)
+    # Precompila i campi se l'utente è autenticato
+    nome = current_user.name if current_user.is_authenticated else ""
+    email = current_user.email if current_user.is_authenticated else ""
+
+    return render_template('prenotazioni.html', nome=nome, email=email)
 
 @app.route('/api/cliente_prenotazioni')
 def api_cliente_prenotazioni():

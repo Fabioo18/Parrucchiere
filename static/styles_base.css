@@ -9,6 +9,7 @@
     --grigio: #f4f4f9;
     --blu: #003366;
     --verde: #A4C639;
+    --base-font-size: 16px; /* Base per calcoli rem */
 }
 
 /* Reset e stili di base */
@@ -19,6 +20,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh; /* Assicura che il body occupi almeno l'altezza della finestra */
+    font-size: 1rem; /* 1rem = 16px */
 }
 
 main {
@@ -32,31 +34,31 @@ main {
 }
 
 .hamburger div {
-    width: 25px;
-    height: 3px;
+    width: 1.5625rem; /* 25px */
+    height: 0.1875rem; /* 3px */
     background-color: white;
-    margin: 5px;
+    margin: 0.3125rem; /* 5px */
 }
 
 /* Barra di navigazione - Trasparente con sfocatura */
 .header-strip {
-    background-color: rgba(0, 0, 0, 0.6); /* Sfondo semi-trasparente */
-    backdrop-filter: blur(10px); /* Aggiunge effetto sfocatura */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));
+    backdrop-filter: blur(0.625rem);
     width: 100%;
-    position: absolute; /* Fissiamo la barra in cima */
+    position: absolute;
     top: 0;
     left: 0;
     z-index: 10;
-    padding: 10px 0;
-    transition: background-color 0.3s ease; /* Transizione del colore di sfondo */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Aggiunge un'ombra sottile */
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6)); /* Gradiente */
+    padding: 0.625rem 0;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
 }
+
 
 .header-title {
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 23%;
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column; /* Se vuoi titolo sopra e logo sotto o viceversa */
@@ -64,16 +66,16 @@ main {
     z-index: 10;
     text-align: center;
     font-family: 'Playfair Display', serif;
-    font-size: 2rem; /* Più grande */
+    font-size: clamp(1rem, 4vw, 2rem); /* Ridotto il font size per essere più contenuto */
     color: white;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+    text-shadow: 0.125rem 0.125rem 0.5rem rgba(0, 0, 0, 0.6); /* 2px 2px 8px */
 }
 
 /* Animazione del logo */
 .header-logo img {
-    max-width: 100px; /* Imposta la larghezza massima per il logo */
+    max-width: 6.25rem; /* 100px */
     display: flex;
-    padding-left: 20px;
+    padding-left: 1.25rem; /* 20px */
     justify-content: flex-start;
     transition: transform 0.3s ease, filter 0.3s ease;
 }
@@ -93,24 +95,24 @@ main {
 }
 
 .header-nav ul li {
-    margin: 0 20px;
+    margin: 0 1rem; 
 }
 
 .header-nav ul li a {
     color: white;
-    font-size: 1.2rem;
+    font-size: clamp(0.8rem, 1.2vw, 1rem);
     font-weight: bold;
     text-decoration: none;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.0625rem; /* 1px */
     transition: color 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
-    padding: 5px 0;
+    padding: 0.3125rem 0; /* 5px */
 }
 
 .header-nav ul li a:hover {
     color: var(--oro); /* Cambia il colore del testo */
     background-color: rgba(255, 255, 255, 0.2); /* Aggiunge un'ombra sottile dietro il link */
-    border-radius: 5px; /* Rende gli angoli arrotondati */
+    border-radius: 0.3125rem; /* 5px */
     transform: scale(1.1); /* Leggero ingrandimento al passaggio del mouse */
 }
 
@@ -120,15 +122,15 @@ header {
     background-size: cover;
     background-position: center;
     color: white;
-    height: 10vh; /* Altezza dell'header */
+    height: 13vh;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     overflow: hidden;
-    background-attachment: fixed; /* Effetto parallax */
+    background-attachment: fixed;
     transition: background-position 0.2s ease;
-    padding-top: 50px; /* Ridotto per non distorcere troppo la visibilità */
+    padding-top: 3.125rem;
 }
 
 header::after {
@@ -146,13 +148,13 @@ header::after {
 .header-content {
     z-index: 10;
     font-family: 'Playfair Display', serif;
-    font-size: 3rem;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-    opacity: 0; /* Inizia invisibile */
-    transform: translateY(50px); /* Inizia dal basso */
-    animation: fadeIn 1s forwards 0.5s; /* Animazione di ingresso */
-    position: relative; /* Posizionato sopra la sfocatura */
-    margin-top: -50px; /* Ridurre la distanza tra navbar e contenuto */
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    text-shadow: 0.125rem 0.125rem 0.3125rem rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transform: translateY(3.125rem);
+    animation: fadeIn 1s forwards 0.5s;
+    position: relative;
+    margin-top: -3.125rem;
 }
 
 @keyframes fadeIn {
@@ -163,81 +165,23 @@ header::after {
 }
 
 .header-content h1 {
-    font-size: 4rem;
-    margin-bottom: 10px;
+    font-size: clamp(2rem, 6vw, 4rem);
+    margin-bottom: 0.625rem;
 }
 
 .header-content p {
-    font-size: 1.4rem;
-    margin-bottom: 20px;
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    margin-bottom: 1.25rem;
 }
 
 /* Footer */
 footer {
-    background-color: #333333;
-    color: #ffffff;
+    background-color: var(--nero);
+    color: var(--bianco);
     text-align: center;
-    padding: 10px 0;
-    position: relative; /* Cambiato da absolute a relative */
-    bottom: 0;
+    padding: 0.625rem 0;
+    font-size: clamp(0.75rem, 2vw, 1rem);
     width: 100%;
-}
-
-/* Media query per schermi piccoli (smartphone) */
-@media (max-width: 768px) {
-    .header-container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .header-logo img {
-        max-width: 80px; /* Riduci la dimensione del logo */
-        margin-bottom: 10px;
-    }
-
-    .header-title {
-        font-size: 1.5rem; /* Riduci la dimensione del titolo */
-    }
-
-    .header-nav ul {
-        display: none; /* Nascondi i link di navigazione */
-        flex-direction: column;
-        background-color: rgba(0, 0, 0, 0.8);
-        position: absolute;
-        top: 50px;
-        right: 0;
-        width: 100%;
-    }
-
-    .header-nav ul.show {
-        display: flex; /* Mostra il menu quando attivato */
-    }
-
-    .hamburger {
-        display: block;
-    }
-
-    .header-nav ul li {
-        margin: 10px 0; /* Aggiungi spazio tra i link */
-    }
-
-    header {
-        height: auto; /* Adatta l'altezza dell'header */
-        padding-top: 20px;
-    }
-
-    .header-content h1 {
-        font-size: 2rem; /* Riduci la dimensione del titolo */
-    }
-
-    .header-content p {
-        font-size: 1rem; /* Riduci la dimensione del paragrafo */
-    }
-
-    footer {
-        font-size: 0.9rem; /* Riduci la dimensione del testo nel footer */
-    }
 }
 
 img {
@@ -277,8 +221,8 @@ img {
     }
 
     .header-logo img {
-        max-width: 80px; /* Riduci la dimensione del logo */
-        margin-bottom: 10px;
+        max-width: 5rem;
+        margin-bottom: 0.625rem;
     }
 
     .header-title {
@@ -286,27 +230,55 @@ img {
     }
 
     .header-nav ul {
-        flex-direction: column; /* Disposizione verticale per i link */
+        display: none;
+        flex-direction: column;
         align-items: center;
+        background-color: rgba(0, 0, 0, 0.8);
+        position: absolute;
+        top: 3.125rem;
+        right: 0;
+        width: 100%;
+    }
+
+    .header-nav ul.show {
+        display: flex; /* Mostra il menu quando attivato */
+    }
+
+    .hamburger {
+        display: block;
     }
 
     .header-nav ul li {
-        margin: 10px 0; /* Aggiungi spazio tra i link */
+        margin: 0.625rem 0;
+    }
+
+    header {
+        height: auto;
+        padding-top: 1.25rem;
+    }
+
+    .header-content h1 {
+        font-size: clamp(1.5rem, 6vw, 2rem);
+    }
+
+    .header-content p {
+        font-size: clamp(0.9rem, 3vw, 1rem);
     }
 
     footer {
-        font-size: 0.8rem; /* Riduci ulteriormente la dimensione del testo nel footer */
+        font-size: 0.9rem; /* Riduci la dimensione del testo nel footer */
     }
 }
+
 
 /* Media query per schermi molto piccoli (schermi inferiori a 480px) */
 @media (max-width: 480px) {
     .header-logo img {
-        max-width: 60px; /* Riduci ulteriormente la dimensione del logo */
+        max-width: 3.75rem;
     }
 
     .header-title {
-        font-size: 1.2rem; /* Riduci la dimensione del titolo */
+        font-size: 1.25rem; /* Riduci la dimensione del titolo */
     }
 
     .header-nav ul li a {
@@ -322,14 +294,14 @@ img {
     }
 
     footer {
-        font-size: 0.8rem; /* Riduci ulteriormente la dimensione del testo nel footer */
+        font-size: 0.75rem; /* Riduci ulteriormente la dimensione del testo nel footer */
     }
 }
 
 /* Media query per schermi molto piccoli (inferiori a 320px) */
 @media (max-width: 320px) {
     .header-logo img {
-        max-width: 50px; /* Riduci ulteriormente la dimensione del logo */
+        max-width: 3.125rem;
     }
 
     .header-title {

@@ -11,6 +11,10 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/it.js"></script>
     <!-- Script personalizzato -->
     <script defer src="{{ url_for('static', filename='script_prenotazioni.js') }}"></script>
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 {% endblock %}
 
 {% block content %}
@@ -21,18 +25,18 @@
             <h1>Prenota un appuntamento</h1>
         </section>
 
-        <!-- Sezione messaggi -->
-        <section class="messages-section">
-            {% with messages = get_flashed_messages(with_categories=True) %}
-                {% if messages %}
-                    <div class="messages" id="message-container">
-                        {% for category, message in messages %}
-                            <p class="{{ category }}">{{ message }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}
-        </section>
+       <!-- Sezione messaggi -->
+<section class="messages-section" style="display: none;">
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <div class="messages" id="message-container">
+                {% for category, message in messages %}
+                    <p class="{{ category }}" data-category="{{ category }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+</section>
 
         <!-- Sezione calendario -->
         <section class="calendar-section">
@@ -40,7 +44,7 @@
         </section>
     </section>
 
-    <!-- Modale per il form di prenotazione -->
+        <!-- Modale per il form di prenotazione -->
     <section class="modal-section">
         <div id="booking-modal" class="modal">
             <div class="modal-content">
@@ -51,12 +55,12 @@
                 <form action="{{ url_for('prenotazioni') }}" method="POST" id="booking-form">
                     <div class="form-group">
                         <label for="nome">Nome:</label>
-                        <input type="text" id="nome" name="nome" required>
+                        <input type="text" id="nome" name="nome" value="{{ nome }}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" value="{{ email }}" required>
                     </div>
 
                     <div class="form-group">

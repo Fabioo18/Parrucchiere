@@ -1,7 +1,7 @@
 /* Stile generale della pagina */
 body {
     background-color: #f4f7fb;
-    font-size: 16px;
+    font-size: 1rem;
     color: #333;
     margin: 0;
     padding: 0;
@@ -15,10 +15,10 @@ body {
     background-size: cover; /* Copre l'intera area */
     background-position: center; /* Centra l'immagine */
     background-repeat: no-repeat; /* Evita la ripetizione */
-    padding: 20px; /* Riduci il padding interno */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Riduci l'ombra */
+    padding: 1.25rem; /* Riduci il padding interno */
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* Riduci l'ombra */
     margin: 0 auto; /* Riduci il margine verticale */
-    padding-top: 20px; /* Aggiungi un po' di padding per distanziare leggermente */
+    padding-top: 1.25rem; /* Aggiungi un po' di padding per distanziare leggermente */
     max-width: 100%; /* Adatta la larghezza massima */
     color: rgb(0, 0, 0); /* Colore del testo per contrasto */
 }
@@ -26,34 +26,34 @@ body {
 /* Sezione titolo */
 .title-section {
     text-align: center;
-    margin: 30px 0;
+    margin: 1.875rem 0; /* 30px */
 }
 
 .title-section h1 {
-    font-size: 36px;
+    font-size: 2.25rem; /* 36px */
     color: #ffffff;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #cda45e;
+    letter-spacing: 0.0625rem; /* 1px */
+    margin-bottom: 1.25rem; /* 20px */
+    border-bottom: 0.125rem solid #cda45e; /* 2px */
     display: inline-block;
-    padding-bottom: 5px;
+    padding-bottom: 0.3125rem; /* 5px */
 }
 
 /* Sezione messaggi */
 .messages-section {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem; /* 20px */
 }
 
 .messages {
-    font-size: 16px;
+    font-size: 1rem;
     margin: 0 auto;
-    max-width: 600px;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 37.5rem; /* 600px */
+    padding: 0.625rem; /* 10px */
+    border-radius: 0.3125rem; /* 5px */
+    box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1); /* 4px 10px */
 }
 
 .messages .success {
@@ -68,19 +68,19 @@ body {
 
 /* Sezione calendario */
 .calendar-section {
-    margin: 20px auto;
+    margin: 1.25rem auto; /* 20px */
     text-align: center;
 }
 
 #calendar {
     width: 90%;
-    max-width: 900px;
+    max-width: 56.25rem; /* 900px */
     margin: 0 auto;
-    padding: 10px;
+    padding: 0.625rem; /* 10px */
     background: #ffffff;
-    border-radius: 10px;
+    border-radius: 0.625rem; /* 10px */
     border: 1px solid #ccc;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1);
 }
 
 /* Giorno indisponibile */
@@ -106,21 +106,21 @@ body {
 
 .modal-content {
     background-color: white;
-    padding: 20px;
-    width: 23%;
-    max-width: 500px;
-    margin: 5% auto; /* Centrato verticalmente e orizzontalmente */
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 1.25rem; /* Ridotto il padding */
+    width: 40%; /* Ridotto la larghezza del modale */
+    max-width: 40rem; /* Ridotto la larghezza massima */
+    margin: 5% auto;
+    border-radius: 0.625rem;
+    box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.2);
     animation: slideIn 0.3s ease-in-out;
-    overflow: hidden; /* Evita che il contenuto esca fuori */
+    overflow: hidden;
 }
 
 /* Centrare il titolo del modale */
 .modal-content h2 {
     text-align: center;
-    margin-bottom: 20px;
-    font-size: 22px;
+    margin-bottom: 1.25rem; /* 20px */
+    font-size: 1.375rem; /* 22px */
     color: #2c3e50;
     font-weight: 600;
 }
@@ -128,7 +128,7 @@ body {
 /* Pulsante di chiusura modale */
 .close {
     float: right;
-    font-size: 20px;
+    font-size: 1.25rem; /* 20px */
     cursor: pointer;
     color: #777;
 }
@@ -140,10 +140,10 @@ body {
 /* Checkbox */
 .checkbox-container {
     display: flex;
-    flex-wrap: wrap; /* Permette di andare a capo se necessario */
-    gap: 10px; /* Spaziatura tra i checkbox */
-    justify-content: center; /* Centra i checkbox orizzontalmente */
-    align-items: center; /* Allinea verticalmente */
+    flex-wrap: wrap;
+    gap: 0.625rem; /* 10px */
+    justify-content: center;
+    align-items: center;
 }
 
 .checkbox-container input {
@@ -152,15 +152,15 @@ body {
 
 .checkbox-container label {
     background: #e0e0e0;
-    padding: 8px 12px;
-    border-radius: 5px;
+    padding: 0.5rem 0.75rem; /* 8px 12px */
+    border-radius: 0.3125rem;
     cursor: pointer;
     transition: background 0.3s, transform 0.2s;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: bold;
     color: #2c3e50;
     text-align: center;
-    min-width: 100px; /* Larghezza minima */
+    min-width: 6.25rem; /* 100px */
 }
 
 .checkbox-container input:checked + label {
@@ -171,47 +171,47 @@ body {
 
 /* Form */
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 0.9375rem; /* 15px */
     text-align: left;
-    max-width: 400px;
-    margin: 0 auto 15px auto;
+    max-width: 25rem; /* 400px */
+    margin: 0 auto 0.9375rem auto;
 }
 
 label {
     font-weight: bold;
     display: block;
-    margin-bottom: 5px;
-    font-size: 14px;
+    margin-bottom: 0.3125rem; /* 5px */
+    font-size: 0.875rem;
     color: #2c3e50;
 }
 
 input, select {
     width: 100%;
-    padding: 10px;
+    padding: 0.625rem; /* 10px */
     border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
+    border-radius: 0.3125rem;
+    font-size: 0.875rem;
     font-family: 'Roboto', sans-serif;
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 input:focus, select:focus {
     border-color: #cda45e;
-    box-shadow: 0 0 5px rgba(205, 164, 94, 0.5);
+    box-shadow: 0 0 0.3125rem rgba(205, 164, 94, 0.5);
 }
 
 button {
     background-color: #0026ff;
-    color: rgb(255, 255, 255);
-    padding: 10px 20px;
+    color: white;
+    padding: 0.625rem 1.25rem; /* 10px 20px */
     border: none;
-    border-radius: 5px;
+    border-radius: 0.3125rem;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: bold;
     transition: background 0.3s ease-in-out, transform 0.2s;
     display: block;
-    margin: 20px auto 0 auto;
+    margin: 1.25rem auto 0 auto;
 }
 
 button:hover {
@@ -227,7 +227,7 @@ button:hover {
     }
 
     .modal-content {
-        width: 95%;
+        width: 70%; /* Modale più piccolo sui dispositivi mobili */
     }
 
     .form-group {
@@ -244,22 +244,22 @@ button:hover {
     }
 
     .checkbox-container label {
-        min-width: 80px; /* Riduce la larghezza minima su schermi piccoli */
+        min-width: 5rem; /* 80px */
     }
 
     .title-section h1 {
-        font-size: 24px; /* Riduci la dimensione del titolo */
+        font-size: 1.5rem; /* 24px */
     }
 }
 
 @media (max-width: 480px) {
 
     .prenotazioni-container {
-        padding: 5px; /* Riduci ulteriormente il padding */
+        padding: 0.3125rem; /* 5px */
     }
 
     .title-section h1 {
-        font-size: 28px;
+        font-size: 1.75rem; /* 28px */
     }
 
     .checkbox-container {
@@ -273,7 +273,7 @@ button:hover {
     }
 
     .modal-content {
-        width: 95%; /* Adatta il modale alla larghezza dello schermo */
+        width: 85%; /* Adatta il modale alla larghezza dello schermo */
     }
 
     #calendar {
@@ -287,11 +287,11 @@ button:hover {
 /* Media query per schermi molto piccoli (inferiori a 320px) */
 @media (max-width: 320px) {
     .prenotazioni-container {
-        padding: 10px; /* Riduci la spaziatura interna */
+        padding: 0.625rem; /* 10px */
     }
 
     .title-section h1 {
-        font-size: 24px; /* Riduci la dimensione del titolo */
+        font-size: 1.5rem; /* 24px */
     }
 
     #calendar {
@@ -312,8 +312,8 @@ button:hover {
     }
 
     button {
-        font-size: 0.9rem; /* Riduci la dimensione del pulsante */
-        padding: 8px 12px;
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
     }
 
     .checkbox-container label {
