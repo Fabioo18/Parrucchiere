@@ -1,0 +1,173 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-image: url('salone2.jpg'); /* Sfondo immagine */
+    background-size: cover; /* Copre l'intera area */
+    background-position: center; /* Centra l'immagine */
+    background-repeat: no-repeat; /* Evita la ripetizione */
+}
+
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem; /* Margine interno per evitare bordi */
+}
+
+.auth-container {
+    background-color: rgba(255, 255, 255, 0.9); /* Sfondo bianco semi-trasparente */
+    padding: 2rem;
+    border-radius: 0.625rem; /* 10px in rem */
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2); /* Ombra leggera */
+    max-width: 400px; /* Larghezza massima */
+    width: 90%; /* Adatta alla larghezza dello schermo */
+    text-align: center;
+}
+
+.auth-container h1 {
+    font-size: 1.5rem; /* Dimensione del titolo */
+    margin-bottom: 1rem; /* Spaziatura inferiore */
+    color: #333333;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Spaziatura tra gli elementi */
+}
+
+.auth-form label {
+    text-align: left;
+    font-weight: bold;
+    color: #555555;
+}
+
+.auth-form input {
+    padding: 0.75rem; /* Margine interno */
+    border: 1px solid #cccccc;
+    border-radius: 0.5rem; /* Angoli arrotondati */
+    font-size: 1rem;
+    width: 100%;
+}
+
+.auth-form input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0.25rem rgba(0, 123, 255, 0.5);
+}
+
+.auth-form .btn {
+    padding: 0.75rem;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.auth-form .btn:hover {
+    background-color: #0056b3;
+}
+
+.auth-container .social-login {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.auth-container .social-login .btn-google {
+    background-color: #db4437;
+    color: #ffffff;
+}
+
+.auth-container .social-login .btn-facebook {
+    background-color: #4267B2;
+    color: #ffffff;
+}
+
+.auth-container .social-login .btn:hover {
+    opacity: 0.9;
+}
+
+.register-link {
+    margin-top: 1rem; /* Spaziatura sopra il link */
+    font-size: 0.9rem; /* Dimensione del testo */
+    color: #007bff; /* Colore del link */
+    text-align: center; /* Centra il testo */
+}
+
+.register-link a {
+    text-decoration: none; /* Rimuove la sottolineatura */
+}
+
+.register-link a:hover {
+    text-decoration: underline; /* Sottolinea il link al passaggio del mouse */
+}
+
+.gsi-material-button {
+    -webkit-appearance: none; /* Chrome, Safari */
+    -moz-appearance: none;    /* Firefox */
+    appearance: none;         /* Standard */
+    background-color: #000000;
+    border: 1px solid #dcdcdc;
+    border-radius: 20px;
+    box-sizing: border-box;
+    color: #ffffff;
+    cursor: pointer;
+    font-family: 'Roboto', arial, sans-serif;
+    font-size: 14px;
+    height: 40px;
+    letter-spacing: 0.25px;
+    outline: none;
+    overflow: hidden;
+    padding: 0 12px;
+    position: relative;
+    text-align: center;
+    transition: background-color .218s, border-color .218s, box-shadow .218s;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: auto;
+    max-width: 400px;
+    min-width: min-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.gsi-material-button .gsi-material-button-icon {
+    height: 20px;
+    width: 20px;
+}
+
+.gsi-material-button .gsi-material-button-content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.gsi-material-button:hover {
+    box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+}
+
+.gsi-material-button:active {
+    background-color: #f8f9fa;
+}
+
+.facebook-button {
+    background-color: #4267B2;
+    color: #ffffff;
+}
+
+.facebook-button:hover {
+    background-color: #365899;
+}

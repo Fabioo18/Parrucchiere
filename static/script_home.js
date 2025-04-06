@@ -32,3 +32,23 @@ document.addEventListener("DOMContentLoaded", function() {
     window.addEventListener('scroll', animaServizi);
     animaServizi(); // Chiamato una volta per vedere subito le animazioni al caricamento
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const popup = document.getElementById("popup");
+    const closePopupButton = document.getElementById("close-popup");
+
+    if (popup) {
+        // Mostra il popup
+        popup.classList.add("show");
+
+        // Chiudi il popup quando si clicca sul pulsante "Chiudi"
+        closePopupButton.addEventListener("click", () => {
+            popup.classList.remove("show");
+        });
+
+        // Chiudi il popup automaticamente dopo 5 secondi
+        setTimeout(() => {
+            popup.classList.remove("show");
+        }, 5000);
+    }
+});

@@ -1,7 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask_bcrypt import Bcrypt
+from flask_dance.contrib.google import make_google_blueprint, google
+from flask_dance.contrib.facebook import make_facebook_blueprint
 from datetime import datetime, timedelta
+from sqlalchemy.exc import SQLAlchemyError
+import requests
 import os
 
 app = Flask(__name__)
@@ -9,9 +15,15 @@ app = Flask(__name__)
 # Configurazione database SQLite
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///prenotazioni.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'connect_args': {'timeout': 30}}
 app.secret_key = 'supersecretkey'
 
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
+
+# Configurazione Flask-Login
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
 
 # Configurazione email (Gmail)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -21,6 +33,38 @@ app.config['MAIL_USERNAME'] = 'lacarbonarafabio18@gmail.com'  # Cambia con il tu
 app.config['MAIL_PASSWORD'] = 'teag qlhq neuo sfsn'  # Password generata per le app
 
 mail = Mail(app)
+
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # Consenti HTTP per OAuth in locale
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+
+# Configurazione OAuth per Google e Facebook
+google_bp = make_google_blueprint(
+    client_id=GOOGLE_CLIENT_ID,
+    client_secret=GOOGLE_CLIENT_SECRET,
+    scope=[
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "openid"
+    ],
+    redirect_to="google_login"
+)
+facebook_bp = make_facebook_blueprint(client_id="FACEBOOK_CLIENT_ID", client_secret="FACEBOOK_CLIENT_SECRET", redirect_to="facebook_login")
+app.register_blueprint(google_bp, url_prefix="/login")
+app.register_blueprint(facebook_bp, url_prefix="/login")
+
+# Modello database per gli utenti
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=True)  # Solo per login con email/password
+    name = db.Column(db.String(150), nullable=False)
+    role = db.Column(db.String(50), nullable=False, default="cliente")  # "cliente" o "admin"
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.get(User, int(user_id))  # Usa Session.get() invece di Query.get()
 
 # Modello database per le prenotazioni
 class Prenotazione(db.Model):
@@ -51,14 +95,166 @@ ORARIO_CHIUSURA = datetime.strptime("19:00", "%H:%M").time()
 # Homepage
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', user=current_user)
+
+# Rotta per la registrazione
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        try:
+            name = request.form.get('name')
+            email = request.form.get('email')
+            password = request.form.get('password')
+
+            # Controlla se tutti i campi sono compilati
+            if not name or not email or not password:
+                flash('Tutti i campi sono obbligatori.', 'danger')
+                return redirect(url_for('register'))
+
+            # Controlla se l'email è già registrata
+            existing_user = User.query.filter_by(email=email).first()
+            if existing_user:
+                flash('Email già registrata.', 'danger')
+                return redirect(url_for('register'))
+
+            # Genera l'hash della password
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+            # Crea un nuovo utente con ruolo predefinito "cliente"
+            new_user = User(name=name, email=email, password=hashed_password, role="cliente")
+            db.session.add(new_user)
+            db.session.commit()
+
+            flash('Registrazione completata! Ora puoi accedere.', 'success')
+            return redirect(url_for('login'))
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            flash(f"Errore durante la registrazione: {str(e)}", 'danger')
+            return redirect(url_for('register'))
+        finally:
+            db.session.close()
+
+    return render_template('register.html')
+
+# Rotta per il login con mail e password
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = User.query.filter_by(email=email).first()
+
+        # Controlla se l'utente esiste e se la password è valida
+        if user and user.password and bcrypt.check_password_hash(user.password, password):
+            login_user(user)
+            flash(f'Accesso effettuato con successo!<br><br>Benvenuto, {user.name}.', 'success')
+            return redirect(url_for('index'))
+        else:
+            # Mostra un messaggio di errore se le credenziali non sono valide
+            flash('Credenziali non valide. Controlla email e password.', 'danger')
+
+    return render_template('login.html')
+
+# Rotta per il logout
+@app.route('/logout')
+@login_required
+def logout():
+    # Logout dell'utente da Flask
+    logout_user()
+
+    # Logout da Google (se è stato effettuato l'accesso)
+    if google.authorized:
+        # Ottieni il token di accesso dalla sessione
+        token = google_bp.session.token.get("access_token")
+        if token:
+            # Effettua una richiesta all'endpoint di revoca di Google
+            revoke_url = "https://oauth2.googleapis.com/revoke"
+            params = {"token": token}
+            headers = {"content-type": "application/x-www-form-urlencoded"}
+            response = requests.post(revoke_url, params=params, headers=headers)
+
+            # Controlla se la revoca è andata a buon fine
+            if response.status_code == 200:
+                flash('Logout effettuato.', 'success')
+            else:
+                flash("")
+
+        # Cancella eventuali cookie OAuth
+        del google_bp.session.token
+
+    # Reindirizza alla homepage dopo il logout
+    flash('Logout effettuato con successo.', 'success')
+    return redirect(url_for('index'))
+
+
+
+@app.route('/google_login')
+def google_login():
+    # Forza sempre la selezione dell'account, anche se l'utente è già connesso
+    if not google.authorized:
+        # Aggiungi il parametro `prompt=select_account` per forzare la selezione dell'account
+        return redirect(url_for("google.login") + "?prompt=select_account")
+
+    try:
+        # Richiesta delle informazioni dell'utente da Google
+        resp = google.get("/oauth2/v2/userinfo")
+        if not resp.ok:
+            flash("Errore durante l'accesso con Google.", "danger")
+            return redirect(url_for("login"))
+
+        # Ottieni le informazioni dell'utente
+        user_info = resp.json()
+        email = user_info.get("email")
+        name = user_info.get("name", "Utente")
+
+        if not email:
+            flash("Errore durante l'accesso con Google: l'email non è disponibile.", "danger")
+            return redirect(url_for("login"))
+
+        # Verifica se l'utente esiste nel database
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            # Se non esiste, crealo
+            user = User(email=email, name=name, role="cliente")
+            db.session.add(user)
+            db.session.commit()
+
+        # Effettua il login dell'utente
+        login_user(user)
+        flash(f"Accesso effettuato con successo!<br><br>Ciao, {user.name}.", "success")
+        return redirect(url_for('index'))
+
+    except Exception as e:
+        flash(f"Errore durante l'accesso con Google: {str(e)}", "danger")
+        return redirect(url_for("login"))
+
+# # Rotta per il login con Facebook
+# @app.route('/facebook_login')
+# def facebook_login():
+#     if not facebook.authorized:
+#         return redirect(url_for("facebook.login"))
+#     resp = facebook.get("/me?fields=id,name,email")
+#     user_info = resp.json()
+#     email = user_info["email"]
+#     name = user_info["name"]
+
+#     user = User.query.filter_by(email=email).first()
+#     if not user:
+#         user = User(email=email, name=name, role="cliente")
+#         db.session.add(user)
+#         db.session.commit()
+
+#     login_user(user)
+#     flash('Accesso effettuato con Facebook!', 'success')
+#     return redirect(url_for('index'))
 
 # Pagina prenotazioni
 @app.route('/prenotazioni', methods=['GET', 'POST'])
+@login_required
 def prenotazioni():
     if request.method == 'POST':
-        nome = request.form['nome']
-        email = request.form['email']
+        nome = current_user.name
+        email = current_user.email
         data = request.form['data']
         orario = request.form['orario']
         
@@ -126,9 +322,7 @@ def prenotazioni():
 
         return redirect(url_for('prenotazioni'))
 
-    return render_template('prenotazioni.html')
-
-
+    return render_template('prenotazioni.html', nome=current_user.name, email=current_user.email)
 
 @app.route('/api/cliente_prenotazioni')
 def api_cliente_prenotazioni():
@@ -414,7 +608,12 @@ def elimina_prenotazione(id):
 
 # Pagina admin per vedere tutte le prenotazioni
 @app.route('/admin/prenotazioni')
+@login_required
 def admin_prenotazioni():
+    if current_user.role != 'admin':
+        flash('Accesso negato. Solo gli admin possono accedere a questa pagina.', 'danger')
+        return redirect(url_for('index'))
+
     prenotazioni = Prenotazione.query.all()
     return render_template('admin_prenotazioni.html', prenotazioni=prenotazioni)
 

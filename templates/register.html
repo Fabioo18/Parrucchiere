@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrazione - Parrucchiere Elegante</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles_auth.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <h1>Registrati</h1>
+
+    <!-- Messaggi flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="popup" class="popup">
+                <div class="popup-content">
+                    {% for category, message in messages %}
+                        <p class="{{ category }}">{{ message|safe }}</p>
+                    {% endfor %}
+                    <button id="close-popup" class="btn">Chiudi</button>
+                </div>
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Form di registrazione -->
+    <form method="POST" class="auth-form">
+        <label for="name">Nome:</label>
+        <input type="text" name="name" placeholder="Inserisci il tuo nome" required>
+        <label for="email">Email:</label>
+        <input type="email" name="email" placeholder="Inserisci la tua email" required>
+        <label for="password">Password:</label>
+        <input type="password" name="password" placeholder="Inserisci la tua password" required>
+        <button type="submit" class="btn">Registrati</button>
+    </form>
+
+    <!-- Link per tornare al login -->
+    <p>Hai già un account? <a href="{{ url_for('login') }}">Accedi</a></p>
+</div>
+{% endblock %}

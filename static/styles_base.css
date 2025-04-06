@@ -16,8 +16,26 @@ body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: var(--grigio);
-    color: var(--nero);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Assicura che il body occupi almeno l'altezza della finestra */
+}
+
+main {
+    flex: 1; /* Fa sì che il contenuto principale occupi lo spazio disponibile */
+}
+
+/* Navbar responsive */
+.hamburger {
+    display: none;
+    cursor: pointer;
+}
+
+.hamburger div {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 5px;
 }
 
 /* Barra di navigazione - Trasparente con sfocatura */
@@ -156,11 +174,13 @@ header::after {
 
 /* Footer */
 footer {
-    background-color: var(--nero);
-    color: white;
-    padding: 20px;
+    background-color: #333333;
+    color: #ffffff;
     text-align: center;
-    font-size: 1rem;
+    padding: 10px 0;
+    position: relative; /* Cambiato da absolute a relative */
+    bottom: 0;
+    width: 100%;
 }
 
 /* Media query per schermi piccoli (smartphone) */
@@ -181,8 +201,21 @@ footer {
     }
 
     .header-nav ul {
-        flex-direction: column; /* Disposizione verticale per i link */
-        align-items: center;
+        display: none; /* Nascondi i link di navigazione */
+        flex-direction: column;
+        background-color: rgba(0, 0, 0, 0.8);
+        position: absolute;
+        top: 50px;
+        right: 0;
+        width: 100%;
+    }
+
+    .header-nav ul.show {
+        display: flex; /* Mostra il menu quando attivato */
+    }
+
+    .hamburger {
+        display: block;
     }
 
     .header-nav ul li {
@@ -205,6 +238,11 @@ footer {
     footer {
         font-size: 0.9rem; /* Riduci la dimensione del testo nel footer */
     }
+}
+
+img {
+    max-width: 100%;
+    height: auto;
 }
 
 /* Media query per schermi medi (tablet) */
