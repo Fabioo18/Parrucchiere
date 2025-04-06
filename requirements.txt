@@ -5,3 +5,4 @@ gunicorn
 flask_dance
 flask_login
 flask_bcrypt
+dotenv
