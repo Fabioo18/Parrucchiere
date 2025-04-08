@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 from sqlalchemy.exc import SQLAlchemyError
 from dotenv import load_dotenv
 from flask_migrate import Migrate
+from itsdangerous import URLSafeTimedSerializer
+
 load_dotenv(dotenv_path='file.env')
 import requests
 import os
@@ -60,6 +62,9 @@ google_bp = make_google_blueprint(
 facebook_bp = make_facebook_blueprint(client_id="FACEBOOK_CLIENT_ID", client_secret="FACEBOOK_CLIENT_SECRET", redirect_to="facebook_login")
 app.register_blueprint(google_bp, url_prefix="/login")
 app.register_blueprint(facebook_bp, url_prefix="/login")
+
+# Configura il serializer per generare e verificare i token
+serializer = URLSafeTimedSerializer(app.secret_key)
 
 # Modello database per gli utenti
 class User(UserMixin, db.Model):
@@ -709,6 +714,66 @@ def admin_prenotazioni():
 
     return render_template('admin_prenotazioni.html', prenotazioni=prenotazioni, operatori=operatori, user_role=current_user.role)
 
+@app.route('/forgot_password', methods=['POST'])
+def forgot_password():
+    data = request.get_json()
+    email = data.get('email')
+    user = User.query.filter_by(email=email).first()
+
+    if user:
+        # Genera un token sicuro con l'email dell'utente
+        token = serializer.dumps(email, salt='password-reset-salt')
+
+        # Invia l'email con il link per il reset
+        reset_link = url_for('reset_password', token=token, _external=True)
+        try:
+            msg = Message(
+                'Reimposta la tua password',
+                sender=app.config['MAIL_USERNAME'],
+                recipients=[email]
+            )
+            msg.body = f"Ciao {user.name},\n\nClicca sul link seguente per reimpostare la tua password:\n{reset_link}\n\nSe non hai richiesto questa operazione, ignora questa email."
+            mail.send(msg)
+            return jsonify({'success': True})
+        except Exception as e:
+            return jsonify({'success': False, 'error': str(e)})
+
+    return jsonify({'success': False, 'error': 'Email non trovata'})
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    try:
+        # Verifica e decodifica il token
+        email = serializer.loads(token, salt='password-reset-salt', max_age=3600)  # Token valido per 1 ora
+    except Exception as e:
+        return jsonify({'success': False, 'error': 'Token non valido o scaduto.'})
+
+    if request.method == 'POST':
+        new_password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+
+        # Log per debug
+        print(f"Password ricevuta: {new_password}, Conferma password: {confirm_password}")
+
+        # Controlla che i campi non siano vuoti
+        if not new_password or not confirm_password:
+            return jsonify({'success': False, 'error': 'I campi password non possono essere vuoti.'})
+
+        if new_password != confirm_password:
+            return jsonify({'success': False, 'error': 'Le password non corrispondono.'})
+
+        user = User.query.filter_by(email=email).first()
+
+        if user:
+            # Aggiorna la password
+            hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+            user.password = hashed_password
+            db.session.commit()
+            return jsonify({'success': True, 'message': 'Password modificata con successo!'})
+        else:
+            return jsonify({'success': False, 'error': 'Utente non trovato.'})
+
+    return render_template('reset_password.html', token=token)
 
 if __name__ == '__main__':
     app.run(debug=True)

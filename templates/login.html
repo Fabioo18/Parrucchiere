@@ -34,7 +34,10 @@
         <label for="password">Password:</label>
         <input type="password" name="password" placeholder="Inserisci la tua password" required>
         <button type="submit" class="btn">Accedi</button>
-        <p class="register-link">Non hai un account? <a href="{{ url_for('register') }}">Registrati</a></p>
+        <p class="forgot-password-link">
+            <a href="#" id="forgot-password">Password Dimenticata?</a>
+        </p>
+        <p class="register-link">oppure <a href="{{ url_for('register') }}">Registrati</a></p>
     </form>
 
     <!-- Login con Google e Facebook -->
