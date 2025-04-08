@@ -83,6 +83,19 @@
     color: white;
 }
 
+.btn-operatore {
+    padding: 8px 16px;
+    background-color: #f0f0f0;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-operatore:hover {
+    background-color: #ddd;
+}
+
 /* Effetto bottone */
 .btn {
     background-color: var(--oro);
@@ -102,48 +115,30 @@
     transform: scale(1.1);
 }
 
-/* Popup */
+/* Stile per il popup */
 .popup {
+    position: fixed; /* Posizionamento fisso per centrare il popup */
+    top: 50%; /* Centra verticalmente */
+    left: 50%; /* Centra orizzontalmente */
+    transform: translate(-50%, -50%); /* Centra esattamente */
+    background-color: white; /* Sfondo bianco */
+    padding: 20px; /* Spaziatura interna */
+    border-radius: 10px; /* Angoli arrotondati */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombra */
+    z-index: 1000; /* Porta il popup sopra gli altri elementi */
+    display: none; /* Nascondi il popup di default */
+}
+
+/* Sfondo scuro dietro il popup */
+.popup-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 0s, opacity 0.3s;
-}
-
-.popup-content {
-    background: white;
-    padding: 1.25rem;
-    border-radius: 0.5rem;
-    text-align: center;
-    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
-}
-
-.popup .btn {
-    margin-top: 0.625rem;
-    padding: 0.625rem 1.25rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 0.3125rem;
-    cursor: pointer;
-}
-
-.popup .btn:hover {
-    background-color: #0056b3;
-}
-
-.popup.show {
-    visibility: visible;
-    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.5); /* Sfondo semi-trasparente */
+    z-index: 999; /* Dietro il popup */
+    display: none; /* Nascondi di default */
 }
 
 /* Media query – perfezionamenti */

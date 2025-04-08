@@ -5,25 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrazione - Parrucchiere Elegante</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles_auth.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script defer src="{{ url_for('static', filename='script_auth.js') }}"></script>
 {% endblock %}
 
 {% block content %}
 <div class="auth-container">
     <h1>Registrati</h1>
 
-    <!-- Messaggi flash -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div id="popup" class="popup">
-                <div class="popup-content">
+    <section class="messages-section" style="display: none;">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="messages" id="message-container">
                     {% for category, message in messages %}
-                        <p class="{{ category }}">{{ message|safe }}</p>
+                        <p class="{{ category }}" data-category="{{ category }}">{{ message|safe }}</p>
                     {% endfor %}
-                    <button id="close-popup" class="btn">Chiudi</button>
                 </div>
-            </div>
-        {% endif %}
-    {% endwith %}
+            {% endif %}
+        {% endwith %}
+    </section>
 
     <!-- Form di registrazione -->
     <form method="POST" class="auth-form">

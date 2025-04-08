@@ -7,6 +7,9 @@ document.addEventListener("DOMContentLoaded", function () {
     var modal = document.getElementById('booking-modal');  // Modale
     var closeModal = document.querySelector('.close');     // Pulsante di chiusura del modale
 
+    // Recupera l'operatore_id dalla pagina
+    var operatoreId = document.querySelector('input[name="operatore_id"]').value;
+
     // Se il calendario è stato trovato nella pagina
     if (calendarEl) {
         console.log("Trovato il div #calendar!");
@@ -16,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
             locale: 'it',
             selectable: true,
             editable: false,
-            events: '/api/cliente_prenotazioni',
+            events: `/api/cliente_prenotazioni/${operatoreId}`, // Carica solo le prenotazioni dell'operatore selezionato
             eventColor: "#FF0000",
             eventTextColor: "white",
 
@@ -71,37 +74,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     return;
                 }
 
-                // Recupera gli orari disponibili per la data selezionata
-                fetch(`/api/orari_disponibili/${info.dateStr}`)
+                // Recupera gli orari disponibili per la data selezionata e operatore
+                fetch(`/api/orari_disponibili_operatore/${operatoreId}/${info.dateStr}`)
                 .then(response => response.json())
                 .then(orari => {
                     console.log("Orari disponibili:", orari);
 
-                    // Rimuoviamo orari troppo vicini all'ora attuale se la data selezionata è oggi
-                    const oggi = new Date();
-                    const dataSelezionata = new Date(info.dateStr);
-                    let orariFiltrati = orari;
-
-                    if (dataSelezionata.toDateString() === oggi.toDateString()) {
-                        const oraAttuale = oggi.getHours();
-                        const minutiAttuali = oggi.getMinutes();
-
-                        orariFiltrati = orari.filter(orario => {
-                            const [h, m] = orario.split(':').map(Number);
-                            const orarioPrenotazione = new Date();
-                            orarioPrenotazione.setHours(h, m, 0, 0);
-
-                            // Richiediamo almeno 30 minuti di anticipo
-                            return (orarioPrenotazione - oggi) >= 30 * 60 * 1000;
-                        });
-                    }
-
-                    if (orariFiltrati.length === 0) {
-                        let cella = document.querySelector(`[data-date='${info.dateStr}']`);
-                        if (cella) {
-                            cella.classList.add('indisponibile');
-                            cella.style.pointerEvents = 'none';
-                        }
+                    if (orari.length === 0) {
                         Swal.fire({
                             title: 'Nessun orario disponibile',
                             text: "Non ci sono orari prenotabili disponibili per oggi.",
@@ -109,17 +88,11 @@ document.addEventListener("DOMContentLoaded", function () {
                             confirmButtonText: 'OK'
                         });
                     } else {
-                        let cella = document.querySelector(`[data-date='${info.dateStr}']`);
-                        if (cella) {
-                            cella.classList.remove('indisponibile');
-                            cella.style.pointerEvents = 'auto';
-                        }
-
                         dataInput.value = info.dateStr;
                         modal.style.display = "block";
 
                         orarioSelect.innerHTML = "";
-                        orariFiltrati.forEach(orario => {
+                        orari.forEach(orario => {
                             var option = document.createElement("option");
                             option.value = orario;
                             option.text = orario;

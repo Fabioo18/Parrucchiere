@@ -9,6 +9,9 @@
     <!-- FullCalendar JS -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/it.js"></script>
+    <script>
+        const currentUserRole = "{{ user_role }}";
+    </script>
     <!-- Script personalizzato -->
     <script defer src="{{ url_for('static', filename='script_admin.js') }}"></script>
     <!-- SweetAlert2 CSS -->
@@ -23,7 +26,6 @@
     <h1>Gestione Prenotazioni</h1>
 </section>
     <div id="calendar"></div>
-
 </section>
 
     <!-- Modale per mostrare i dettagli -->
@@ -62,6 +64,17 @@
                             <input type="time" id="editOrario" name="orario" class="input-form" required>
                         </div>
 
+                        {% if current_user.role == 'parrucchiere' %}
+                        <div class="form-group">
+                            <label>Operatore:</label>
+                            <select id="editOperatore" name="operatore" class="input-form">
+                                {% for operatore in operatori %}
+                                    <option value="{{ operatore.id }}">{{ operatore.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endif %}
+
                         <div class="form-group">
                             <label>Servizi:</label>
                             <div class="checkbox-container">
@@ -71,7 +84,8 @@
                                 <input type="checkbox" id="editServizioTrattamento" value="Trattamento"> <label for="editServizioTrattamento">Trattamento</label>
                                 <input type="checkbox" id="editServizioShampoo" value="Shampoo"> <label for="editServizioShampoo">Shampoo</label>
                             </div>
-                        </div>            
+                        </div>
+
                         
                         <button type="button" onclick="salvaModifiche()" class="btn btn-success">Salva Modifiche</button>
                     </form>

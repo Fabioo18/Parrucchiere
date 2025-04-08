@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Parrucchiere Elegante</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/it.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles_home.css') }}">
     <script defer src="{{ url_for('static', filename='script_home.js') }}"></script>
@@ -14,29 +18,29 @@
 {% endblock %}
 
 {% block content %}
-          <!-- Sezione messaggi -->
-          <section class="messages-section" style="display: none;">
-            {% with messages = get_flashed_messages(with_categories=True) %}
-                {% if messages %}
-                    <div class="messages" id="message-container">
-                        {% for category, message in messages %}
-                            <p class="{{ category }}" data-category="{{ category }}">{{ message|safe }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}
-        </section>
+    <!-- Sezione messaggi -->
+    <section class="messages-section" style="display: none;">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="messages" id="message-container">
+                    {% for category, message in messages %}
+                        <p class="{{ category }}" data-category="{{ category }}">{{ message|safe }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </section>
 
     <!-- Contenuto comune a tutti gli utenti -->
     <div class="content">
-        {% if current_user.is_authenticated and current_user.role == 'parrucchiere' %}
+        {% if current_user.is_authenticated and (current_user.role == 'parrucchiere' or current_user.role == 'operatore') %}
             <h1>Gestione Prenotazioni</h1>
             <p>Accedi alla gestione delle prenotazioni per il salone.</p>
             <a href="{{ url_for('admin_prenotazioni') }}" class="btn">Gestione Prenotazioni</a>
         {% else %}
             <h1>Benvenuto da HairStyle</h1>
             <p>Tagli e colori su misura per te</p>
-            <a href="{{ url_for('prenotazioni') }}" class="btn">Prenota Ora</a>
+            <a href="#" class="btn" id="prenota-ora-btn">Prenota Ora</a>
         {% endif %}
     </div>
 
@@ -56,4 +60,5 @@
             <p>Colori brillanti e lucenti per un look fresco e vibrante.</p>
         </div>
     </section>
+
 {% endblock %}

@@ -8,6 +8,7 @@ from flask_dance.contrib.facebook import make_facebook_blueprint
 from datetime import datetime, timedelta
 from sqlalchemy.exc import SQLAlchemyError
 from dotenv import load_dotenv
+from flask_migrate import Migrate
 load_dotenv(dotenv_path='file.env')
 import requests
 import os
@@ -22,6 +23,9 @@ app.secret_key = 'supersecretkey'
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
+
+# Dopo aver inizializzato `db`
+migrate = Migrate(app, db)
 
 # Configurazione Flask-Login
 login_manager = LoginManager(app)
@@ -61,13 +65,20 @@ app.register_blueprint(facebook_bp, url_prefix="/login")
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=True)  # Solo per login con email/password
+    password = db.Column(db.String(150), nullable=True)
     name = db.Column(db.String(150), nullable=False)
-    role = db.Column(db.String(50), nullable=False, default="cliente")  # "cliente" o "admin"
+    role = db.Column(db.String(50), nullable=False, default="cliente")  # "cliente", "parrucchiere", "operatore"
+    operatore_id = db.Column(db.Integer, db.ForeignKey('operatore.id'), nullable=True)  # Associa un operatore
 
 @login_manager.user_loader
 def load_user(user_id):
     return db.session.get(User, int(user_id))  # Assicurati che carichi correttamente l'utente
+
+# Modello database per gli operatori
+class Operatore(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(100), nullable=False)
+    prenotazioni = db.relationship('Prenotazione', backref='operatore', lazy=True)
 
 # Modello database per le prenotazioni
 class Prenotazione(db.Model):
@@ -77,6 +88,7 @@ class Prenotazione(db.Model):
     data = db.Column(db.String(50), nullable=False)
     orario = db.Column(db.String(50), nullable=False)
     servizio = db.Column(db.String(200), nullable=False)  # Permettiamo fino a 200 caratteri per più servizi
+    operatore_id = db.Column(db.Integer, db.ForeignKey('operatore.id'), nullable=False)
 
 # Creazione del database alla prima esecuzione
 with app.app_context():
@@ -102,6 +114,8 @@ ORARIO_CHIUSURA = datetime.strptime("19:00", "%H:%M").time()
 # Homepage
 @app.route('/')
 def index():
+    if current_user.is_authenticated:
+        print(f"Utente autenticato: {current_user.name}, Ruolo: {current_user.role}")
     return render_template('index.html', user=current_user)
 
 # Rotta per la registrazione
@@ -151,13 +165,11 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(email=email).first()
 
-        # Controlla se l'utente esiste e se la password è valida
         if user and user.password and bcrypt.check_password_hash(user.password, password):
             login_user(user)
-            flash(f'Accesso effettuato con successo!<br><br>Ciao, {user.name}.', 'success')
+            flash(f'Accesso effettuato con successo! <br> <br> Ciao, {user.name}.', 'success')
             return redirect(url_for('index'))
         else:
-            # Mostra un messaggio di errore se le credenziali non sono valide
             flash('Credenziali non valide. Controlla email e password.', 'danger')
 
     return render_template('login.html')
@@ -258,6 +270,11 @@ def google_login():
 # Pagina prenotazioni
 @app.route('/prenotazioni', methods=['GET', 'POST'])
 def prenotazioni():
+    operatore_id = request.args.get('operatore_id') or request.form.get('operatore_id')
+    if not operatore_id:
+        flash("Seleziona un operatore per visualizzare il calendario.", "danger")
+        return redirect(url_for('index'))
+
     if request.method == 'POST':
         nome = request.form.get('nome') or (current_user.name if current_user.is_authenticated else None)
         email = request.form.get('email') or (current_user.email if current_user.is_authenticated else None)
@@ -267,7 +284,7 @@ def prenotazioni():
         # Controlla se nome ed email sono forniti
         if not nome or not email:
             flash("Nome ed email sono obbligatori per effettuare una prenotazione.", "danger")
-            return redirect(url_for('prenotazioni'))
+            return redirect(url_for('prenotazioni', operatore_id=operatore_id))
 
         # Recupera i servizi selezionati
         servizi = request.form.getlist('servizi')
@@ -282,18 +299,18 @@ def prenotazioni():
         # Controlla se la data selezionata è una domenica o lunedì
         if data_obj.weekday() in {6, 0}:  # 6 = Domenica, 0 = Lunedì
             flash("Non è possibile prenotare la domenica o il lunedì. Scegli un altro giorno.", "danger")
-            return redirect(url_for('prenotazioni'))
+            return redirect(url_for('prenotazioni', operatore_id=operatore_id))
 
         # Controlla se la data selezionata è prima della data odierna
         if data_obj < data_odierna:
             flash("Non è possibile prenotare una data passata. Scegli una data a partire da oggi.", "danger")
-            return redirect(url_for('prenotazioni'))
+            return redirect(url_for('prenotazioni', operatore_id=operatore_id))
 
         # Controlla se l'orario scelto è fuori dagli orari di apertura
         orario_obj = datetime.strptime(orario, "%H:%M").time()
         if orario_obj < ORARIO_APERTURA or orario_obj > ORARIO_CHIUSURA:
             flash("L'orario selezionato è fuori dagli orari di apertura del salone (09:00 - 19:00).", "danger")
-            return redirect(url_for('prenotazioni'))
+            return redirect(url_for('prenotazioni', operatore_id=operatore_id))
 
         # Calcola la durata totale dei servizi selezionati
         durata_totale = sum(durate_servizi[servizio] for servizio in servizi)
@@ -302,8 +319,8 @@ def prenotazioni():
         esistente_inizio = datetime.strptime(orario, '%H:%M')
         esistente_fine = esistente_inizio + timedelta(minutes=durata_totale)
 
-        # Controlla se esistono prenotazioni che si sovrappongono
-        prenotazioni_in_giorno = Prenotazione.query.filter_by(data=data).all()
+        # Controlla se esistono prenotazioni che si sovrappongono per l'operatore selezionato
+        prenotazioni_in_giorno = Prenotazione.query.filter_by(data=data, operatore_id=operatore_id).all()
         
         for prenotazione in prenotazioni_in_giorno:
             orario_esistente_inizio = datetime.strptime(prenotazione.orario, '%H:%M')
@@ -312,50 +329,97 @@ def prenotazioni():
 
             if not (esistente_fine <= orario_esistente_inizio or esistente_inizio >= orario_esistente_fine):
                 flash('Questo orario è già prenotato per un altro servizio. Scegli un altro orario.', 'danger')
-                return redirect(url_for('prenotazioni'))
+                return redirect(url_for('prenotazioni', operatore_id=operatore_id))
 
         # Salva la prenotazione nel database
-        nuova_prenotazione = Prenotazione(nome=nome, email=email, data=data, orario=orario, servizio=servizi_str)
+        nuova_prenotazione = Prenotazione(nome=nome, email=email, data=data, orario=orario, servizio=servizi_str, operatore_id=operatore_id)
         db.session.add(nuova_prenotazione)
         db.session.commit()
 
         # Invia la mail di conferma
         try:
+            operatore = Operatore.query.get(operatore_id)
+            nome_operatore = operatore.nome if operatore else "Operatore non specificato"
             msg = Message('Conferma Prenotazione', sender=app.config['MAIL_USERNAME'], recipients=[email, 'lacarbonarafabio18@gmail.com'])
-            msg.body = f"Ciao {nome},\n\nHai prenotato un appuntamento per i seguenti servizi: {servizi_str}.\nData: {data}\nOrario: {orario}\n\nGrazie per aver scelto il nostro salone!\n\nSaluti,\nIl team del salone"
+            msg.body = f"Ciao {nome},\n\nHai prenotato un appuntamento per i seguenti servizi: {servizi_str}.\nData: {data}\nOrario: {orario}\nOperatore: {nome_operatore}\n\nGrazie per aver scelto il nostro salone!\n\nSaluti,\nIl team del salone"
             mail.send(msg)
             flash('Prenotazione effettuata con successo! Controlla la tua email.', 'success')
         except Exception as e:
             flash(f"Errore nell'invio dell'email: {e}", 'danger')
 
-        return redirect(url_for('prenotazioni'))
+        return redirect(url_for('prenotazioni', operatore_id=operatore_id))
 
     # Precompila i campi se l'utente è autenticato
     nome = current_user.name if current_user.is_authenticated else ""
     email = current_user.email if current_user.is_authenticated else ""
 
-    return render_template('prenotazioni.html', nome=nome, email=email)
+    return render_template('prenotazioni.html', nome=nome, email=email, operatore_id=operatore_id)
 
-@app.route('/api/cliente_prenotazioni')
-def api_cliente_prenotazioni():
-    prenotazioni = Prenotazione.query.all()
-    eventi = []
+# @app.route('/api/cliente_prenotazioni')
+# def api_cliente_prenotazioni():
+#     prenotazioni = Prenotazione.query.all()
+#     eventi = []
     
-    # Set di giorni non prenotabili
-    giorni_non_prenotabili = {6, 0}  # Domenica (6) e Lunedì (0)
+#     # Set di giorni non prenotabili
+#     giorni_non_prenotabili = {6, 0}  # Domenica (6) e Lunedì (0)
+
+#     for p in prenotazioni:
+#         # Calcola la durata totale dei servizi selezionati
+#         servizi = p.servizio.split(", ")
+#         durata_totale = sum(durate_servizi[servizio] for servizio in servizi)
+
+#         # Calcola l'orario di inizio della prenotazione
+#         orario_inizio = datetime.strptime(p.orario, '%H:%M')
+#         orario_fine = orario_inizio + timedelta(minutes=durata_totale)
+
+#         titolo_evento = f"{orario_fine.strftime('%H:%M')}"
+
+#         # Aggiungi evento con orario di fine
+#         evento = {
+#             "id": p.id,  # Assicurati che l'ID venga passato
+#             "title": "-" + " " + titolo_evento,  # Titolo con nome e servizio
+#             "start": p.data + "T" + p.orario,  # Orario di inizio
+#             "end": orario_fine.strftime("%Y-%m-%dT%H:%M:%S"),  # Orario di fine
+#             "textColor": "white"  # Colore del testo
+#         }
+
+#         eventi.append(evento)
+
+#     # Aggiungi giorni non prenotabili
+#     prenotazioni_per_data = {}
+#     for p in prenotazioni:
+#         if p.data not in prenotazioni_per_data:
+#             prenotazioni_per_data[p.data] = []
+
+#     for data in prenotazioni_per_data:
+#         if datetime.strptime(data, "%Y-%m-%d").weekday() in giorni_non_prenotabili:
+#             eventi.append({
+#                 "id": "non_prenotabile_" + data,
+#                 "title": "Giorno non prenotabile",
+#                 "start": f"{data}T00:00:00",
+#                 "end": f"{data}T23:59:59",
+#                 "color": "#FF0000",  # Colore rosso
+#                 "textColor": "white"
+#             })
+    
+#     return jsonify(eventi)
+
+@app.route('/api/cliente_prenotazioni/<int:operatore_id>')
+def api_cliente_prenotazioni(operatore_id):
+    prenotazioni = Prenotazione.query.filter_by(operatore_id=operatore_id).all()
+    eventi = []
 
     for p in prenotazioni:
         # Calcola la durata totale dei servizi selezionati
         servizi = p.servizio.split(", ")
         durata_totale = sum(durate_servizi[servizio] for servizio in servizi)
 
-        # Calcola l'orario di inizio della prenotazione
+        # Calcola l'orario di fine
         orario_inizio = datetime.strptime(p.orario, '%H:%M')
         orario_fine = orario_inizio + timedelta(minutes=durata_totale)
 
         titolo_evento = f"{orario_fine.strftime('%H:%M')}"
 
-        # Aggiungi evento con orario di fine
         evento = {
             "id": p.id,  # Assicurati che l'ID venga passato
             "title": "-" + " " + titolo_evento,  # Titolo con nome e servizio
@@ -366,24 +430,13 @@ def api_cliente_prenotazioni():
 
         eventi.append(evento)
 
-    # Aggiungi giorni non prenotabili
-    prenotazioni_per_data = {}
-    for p in prenotazioni:
-        if p.data not in prenotazioni_per_data:
-            prenotazioni_per_data[p.data] = []
-
-    for data in prenotazioni_per_data:
-        if datetime.strptime(data, "%Y-%m-%d").weekday() in giorni_non_prenotabili:
-            eventi.append({
-                "id": "non_prenotabile_" + data,
-                "title": "Giorno non prenotabile",
-                "start": f"{data}T00:00:00",
-                "end": f"{data}T23:59:59",
-                "color": "#FF0000",  # Colore rosso
-                "textColor": "white"
-            })
-    
     return jsonify(eventi)
+
+@app.route('/api/operatori', methods=['GET'])
+def get_operatori():
+    operatori = Operatore.query.all()
+    print("Operatori trovati:", operatori)  # Log per verificare i dati
+    return jsonify([{'id': operatore.id, 'nome': operatore.nome} for operatore in operatori])
 
 
 @app.route('/api/orari_disponibili/<data>', methods=['GET'])
@@ -423,11 +476,39 @@ def orari_disponibili(data):
 
     return jsonify(orari_possibili)
 
-@app.route('/api/prenotazioni')
-def api_prenotazioni():
-    prenotazioni = Prenotazione.query.all()
-    eventi = []
+@app.route('/api/orari_disponibili_operatore/<int:operatore_id>/<data>', methods=['GET'])
+def orari_disponibili_operatore(operatore_id, data):
+    prenotazioni = Prenotazione.query.filter_by(data=data, operatore_id=operatore_id).all()
+    orari_prenotati = [(datetime.strptime(p.orario, '%H:%M').time(),
+                        (datetime.strptime(p.orario, '%H:%M') + timedelta(minutes=sum(durate_servizi[s] for s in p.servizio.split(', ')))).time())
+                       for p in prenotazioni]
 
+    orari_possibili = []
+    ora_corrente = datetime.strptime("09:00", "%H:%M")
+    ora_fine = datetime.strptime("19:00", "%H:%M")
+
+    while ora_corrente.time() < ora_fine.time():
+        prossimo_slot = (ora_corrente + timedelta(minutes=30)).time()
+        disponibile = all(prossimo_slot <= inizio or ora_corrente.time() >= fine for inizio, fine in orari_prenotati)
+        if disponibile:
+            orari_possibili.append(ora_corrente.strftime("%H:%M"))
+        ora_corrente += timedelta(minutes=30)
+
+    return jsonify(orari_possibili)
+
+@app.route('/api/prenotazioni')
+@login_required
+def api_prenotazioni():
+    if current_user.role == 'parrucchiere':
+        # Il parrucchiere vede tutte le prenotazioni
+        prenotazioni = Prenotazione.query.all()
+    elif current_user.role == 'operatore':
+        # L'operatore vede solo le sue prenotazioni
+        prenotazioni = Prenotazione.query.filter_by(operatore_id=current_user.operatore_id).all()
+    else:
+        return jsonify({'error': 'Non autorizzato'}), 403
+
+    eventi = []
     for p in prenotazioni:
         # Calcola la durata totale dei servizi
         servizi = p.servizio.split(', ')
@@ -464,22 +545,38 @@ def api_prenotazione(id):
             'email': prenotazione.email,
             'data': prenotazione.data,
             'orario': prenotazione.orario,
-            'servizio': prenotazione.servizio
+            'servizio': prenotazione.servizio,
+            'operatore_id': prenotazione.operatore_id  # Aggiungi l'operatore
         })
     else:
         return jsonify({'error': 'Prenotazione non trovata'}), 404
     
 @app.route('/api/modifica_prenotazione/<int:id>', methods=['PUT'])
+@login_required
 def modifica_prenotazione(id):
     prenotazione = Prenotazione.query.get(id)
     if not prenotazione:
         return jsonify({'error': 'Prenotazione non trovata'}), 404
 
+    # Controlla se l'utente è autorizzato a modificare la prenotazione
+    if current_user.role == 'operatore' and prenotazione.operatore_id != current_user.operatore_id:
+        return jsonify({'error': 'Non sei autorizzato a modificare questa prenotazione'}), 403
+
     data = request.json
     nuova_data = data.get('data', prenotazione.data)
+    nuovo_orario = data.get('orario', prenotazione.orario)
+    nuovo_nome = data.get('nome', prenotazione.nome)
+    nuova_email = data.get('email', prenotazione.email)
+    nuovo_servizio = data.get('servizio', prenotazione.servizio)
+
+    # Gli operatori non possono modificare il campo "Operatore"
+    if current_user.role == 'parrucchiere':
+        nuovo_operatore_id = data.get('operatore_id', prenotazione.operatore_id)
+    else:
+        nuovo_operatore_id = prenotazione.operatore_id
 
     # Verifica che la nuova data non sia prima di oggi
-    today = datetime.today().date()  # Ottieni la data odierna
+    today = datetime.today().date()
     nuova_data_obj = datetime.strptime(nuova_data, "%Y-%m-%d").date()
 
     if nuova_data_obj < today:
@@ -488,20 +585,11 @@ def modifica_prenotazione(id):
     # Set di giorni non prenotabili (Domenica e Lunedì)
     giorni_non_prenotabili = {6, 0}  # Domenica (6) e Lunedì (0)
 
-    # Verifica se la nuova data è domenica o lunedì
     if nuova_data_obj.weekday() in giorni_non_prenotabili:
         return jsonify({'error': 'Non è possibile prenotare per domenica o lunedì.'}), 400
 
-    nuovo_orario = data.get('orario', prenotazione.orario)
-    nuovo_nome = data.get('nome', prenotazione.nome)
-    nuova_email = data.get('email', prenotazione.email)
-    nuovo_servizio = data.get('servizio', prenotazione.servizio)
-
     try:
-        # Convertiamo l'orario in formato time() per il confronto
         orario_prenotazione = datetime.strptime(nuovo_orario, "%H:%M").time()
-        
-        # Controllo se l'orario è dentro l'orario di apertura del salone
         if orario_prenotazione < ORARIO_APERTURA or orario_prenotazione > ORARIO_CHIUSURA:
             return jsonify({'error': f'Orario non valido! Il salone è aperto dalle {ORARIO_APERTURA.strftime("%H:%M")} alle {ORARIO_CHIUSURA.strftime("%H:%M")}'}), 400
     except ValueError:
@@ -511,59 +599,45 @@ def modifica_prenotazione(id):
     prenotazione_esistente = Prenotazione.query.filter(
         Prenotazione.data == nuova_data,
         Prenotazione.orario == nuovo_orario,
+        Prenotazione.operatore_id == nuovo_operatore_id,
         Prenotazione.id != id
     ).first()
 
     if prenotazione_esistente:
-        return jsonify({'error': 'Orario già prenotato. Scegli un altro orario.'}), 400
+        return jsonify({'error': 'Orario già prenotato per questo operatore. Scegli un altro orario.'}), 400
 
-    # **Salvataggio delle vecchie informazioni per l'email**
-    vecchia_prenotazione = {
-        "Nome": prenotazione.nome,
-        "Email": prenotazione.email,
-        "Data": prenotazione.data,
-        "Orario": prenotazione.orario,
-        "Servizio": prenotazione.servizio
-    }
-
-    # Se tutto è valido, aggiorna la prenotazione
+    # Aggiorna i dettagli della prenotazione
     prenotazione.nome = nuovo_nome
     prenotazione.email = nuova_email
     prenotazione.data = nuova_data
     prenotazione.orario = nuovo_orario
     prenotazione.servizio = nuovo_servizio
+    prenotazione.operatore_id = nuovo_operatore_id
 
     db.session.commit()
 
-    # **Invio email di conferma modifica**
+    # Invia l'email con i dettagli aggiornati
     try:
+        operatore = Operatore.query.get(nuovo_operatore_id)
+        nome_operatore = operatore.nome if operatore else "Operatore non specificato"
         msg = Message(
-            subject="Modifica Prenotazione - Salone di Bellezza",
-            sender="tuamail@example.com",
-            recipients=[prenotazione.email]
+            "Modifica Prenotazione - Salone di Bellezza",
+            sender=app.config['MAIL_USERNAME'],
+            recipients=[nuova_email]
         )
         msg.body = f"""
-        Ciao {prenotazione.nome},
+        Ciao {nuovo_nome},
 
-        La tua prenotazione è stata modificata con successo.
+        La tua prenotazione è stata modificata con successo. Ecco i dettagli aggiornati:
 
-        **Dettagli della vecchia prenotazione:**
-        - Nome: {vecchia_prenotazione["Nome"]}
-        - Email: {vecchia_prenotazione["Email"]}
-        - Data: {vecchia_prenotazione["Data"]}
-        - Orario: {vecchia_prenotazione["Orario"]}
-        - Servizio: {vecchia_prenotazione["Servizio"]}
+        - Data: {nuova_data}
+        - Orario: {nuovo_orario}
+        - Servizio: {nuovo_servizio}
+        - Operatore: {nome_operatore}
 
-        **Nuovi dettagli della prenotazione:**
-        - Nome: {prenotazione.nome}
-        - Email: {prenotazione.email}
-        - Data: {prenotazione.data}
-        - Orario: {prenotazione.orario}
-        - Servizio: {prenotazione.servizio}
+        Grazie per aver scelto il nostro salone!
 
-        Se non hai richiesto questa modifica, contattaci subito!
-
-        Grazie,
+        Saluti,
         Il Team del Salone di Bellezza
         """
         mail.send(msg)
@@ -617,17 +691,25 @@ def elimina_prenotazione(id):
     else:
         return jsonify({'error': 'Prenotazione non trovata'}), 404
 
-
 # Pagina admin per vedere tutte le prenotazioni
 @app.route('/admin/prenotazioni')
 @login_required
 def admin_prenotazioni():
-    if current_user.role != 'parrucchiere':
+    if current_user.role == 'parrucchiere':
+        # L'admin globale vede tutte le prenotazioni
+        prenotazioni = Prenotazione.query.all()
+        operatori = Operatore.query.all()  # Recupera tutti gli operatori
+    elif current_user.role == 'operatore':
+        # L'operatore vede solo le sue prenotazioni
+        prenotazioni = Prenotazione.query.filter_by(operatore_id=current_user.operatore_id).all()
+        operatori = None  # Gli operatori non devono vedere la lista di altri operatori
+    else:
         flash('Accesso negato. Solo gli admin possono accedere a questa pagina.', 'danger')
         return redirect(url_for('index'))
 
-    prenotazioni = Prenotazione.query.all()
-    return render_template('admin_prenotazioni.html', prenotazioni=prenotazioni)
+    return render_template('admin_prenotazioni.html', prenotazioni=prenotazioni, operatori=operatori, user_role=current_user.role)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
+

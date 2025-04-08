@@ -52,7 +52,8 @@
                 <h2>Prenota il tuo appuntamento<br></h2>
                 
                 <!-- Form di prenotazione -->
-                <form action="{{ url_for('prenotazioni') }}" method="POST" id="booking-form">
+                <form action="{{ url_for('prenotazioni', operatore_id=operatore_id) }}" method="POST" id="booking-form">
+                    <input type="hidden" name="operatore_id" value="{{ operatore_id }}">
                     <div class="form-group">
                         <label for="nome">Nome:</label>
                         <input type="text" id="nome" name="nome" value="{{ nome }}" required>

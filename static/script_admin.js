@@ -80,19 +80,17 @@ function modificaPrenotazione() {
 
                 // Seleziona i servizi
                 let serviziSelezionati = data.servizio.split(", ");
-                // Reset delle checkbox
-                document.getElementById('editServizioTaglio').checked = false;
-                document.getElementById('editServizioPiega').checked = false;
-                document.getElementById('editServizioColore').checked = false;
-                document.getElementById('editServizioTrattamento').checked = false;
-                document.getElementById('editServizioShampoo').checked = false;
+                document.getElementById('editServizioTaglio').checked = serviziSelezionati.includes('Taglio');
+                document.getElementById('editServizioPiega').checked = serviziSelezionati.includes('Piega');
+                document.getElementById('editServizioColore').checked = serviziSelezionati.includes('Colore');
+                document.getElementById('editServizioTrattamento').checked = serviziSelezionati.includes('Trattamento');
+                document.getElementById('editServizioShampoo').checked = serviziSelezionati.includes('Shampoo');
 
-                // Seleziona le checkbox in base ai servizi presenti
-                if (serviziSelezionati.includes('Taglio')) document.getElementById('editServizioTaglio').checked = true;
-                if (serviziSelezionati.includes('Piega')) document.getElementById('editServizioPiega').checked = true;
-                if (serviziSelezionati.includes('Colore')) document.getElementById('editServizioColore').checked = true;
-                if (serviziSelezionati.includes('Trattamento')) document.getElementById('editServizioTrattamento').checked = true;
-                if (serviziSelezionati.includes('Shampoo')) document.getElementById('editServizioShampoo').checked = true;
+                // Mostra o nascondi il campo "Operatore" in base al ruolo
+                if (data.operatore_id && document.getElementById('editOperatore')) {
+                    document.getElementById('editOperatore').value = data.operatore_id;
+                    document.querySelector('.form-group select[name="operatore"]').style.display = currentUserRole === 'parrucchiere' ? 'block' : 'none';
+                }
 
                 // Mostra la modale
                 document.getElementById('editModal').style.display = 'block';
@@ -110,10 +108,22 @@ function modificaPrenotazione() {
 function salvaModifiche() {
     var eventId = document.getElementById('editForm').getAttribute('data-id');
 
-    var nome = document.getElementById('editNome').value;
-    var email = document.getElementById('editEmail').value;
-    var data = document.getElementById('editData').value;
-    var orario = document.getElementById('editOrario').value;
+    var nome = document.getElementById('editNome').value.trim();
+    var email = document.getElementById('editEmail').value.trim();
+    var data = document.getElementById('editData').value.trim();
+    var orario = document.getElementById('editOrario').value.trim();
+    var operatoreId = document.getElementById('editOperatore') ? document.getElementById('editOperatore').value : null;
+
+    // Verifica che i campi obbligatori siano compilati
+    if (!nome || !email || !data || !orario) {
+        Swal.fire({
+            title: 'Errore',
+            text: 'Tutti i campi obbligatori devono essere compilati.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
 
     // Raccogli i servizi selezionati
     var servizi = [];
@@ -123,13 +133,24 @@ function salvaModifiche() {
     if (document.getElementById('editServizioTrattamento').checked) servizi.push("Trattamento");
     if (document.getElementById('editServizioShampoo').checked) servizi.push("Shampoo");
 
+    // Mostra il loader
+    showLoader();
+
+    // Prepara i dati per la richiesta
+    var body = { nome, email, data, orario, servizio: servizi.join(", ") };
+    if (currentUserRole === 'parrucchiere') {
+        body.operatore_id = operatoreId;
+    }
+
+    // Effettua la richiesta al server
     fetch('/api/modifica_prenotazione/' + eventId, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome, email, data, orario, servizio: servizi.join(", ") })
+        body: JSON.stringify(body)
     })
     .then(response => response.json())
     .then(data => {
+        hideLoader();
         if (data.success) {
             Swal.fire({
                 title: 'Successo',
@@ -149,12 +170,15 @@ function salvaModifiche() {
             });
         }
     })
-    .catch(error => Swal.fire({
-        title: 'Errore',
-        text: 'Errore nella modifica: ' + error,
-        icon: 'error',
-        confirmButtonText: 'OK'
-    }));
+    .catch(error => {
+        hideLoader();
+        Swal.fire({
+            title: 'Errore',
+            text: 'Errore nella modifica: ' + error,
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    });
 }
 
 function closeEditModal() {
@@ -208,4 +232,18 @@ function eliminaPrenotazione() {
 
 function closeModal() {
     document.getElementById('detailModal').style.display = 'none';
+}
+
+function showLoader() {
+    Swal.fire({
+        title: 'Caricamento...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+}
+
+function hideLoader() {
+    Swal.close();
 }
