@@ -8,7 +8,6 @@ from flask_dance.contrib.facebook import make_facebook_blueprint
 from datetime import datetime, timedelta
 from sqlalchemy.exc import SQLAlchemyError
 from dotenv import load_dotenv
-from flask_migrate import Migrate
 from itsdangerous import URLSafeTimedSerializer
 
 load_dotenv(dotenv_path='file.env')
@@ -26,8 +25,6 @@ app.secret_key = 'supersecretkey'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
-# Dopo aver inizializzato `db`
-migrate = Migrate(app, db)
 
 # Configurazione Flask-Login
 login_manager = LoginManager(app)
