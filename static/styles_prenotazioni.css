@@ -16,6 +16,8 @@ body {
     background-position: center; /* Centra l'immagine */
     background-repeat: no-repeat; /* Evita la ripetizione */
     padding: 1.25rem; /* Riduci il padding interno */
+    overflow: hidden;
+    box-sizing: border-box;
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* Riduci l'ombra */
     margin: 0 auto; /* Riduci il margine verticale */
     padding-top: 1.25rem; /* Aggiungi un po' di padding per distanziare leggermente */
@@ -72,6 +74,7 @@ body {
     text-align: center;
 }
 
+/* Stile del calendario */
 #calendar {
     width: 90%;
     max-width: 56.25rem; /* 900px */
@@ -221,67 +224,103 @@ button:hover {
 
 /* Media Queries per dispositivi mobili */
 @media (max-width: 768px) {
+    .prenotazioni-container {
+        padding: 0.625rem; /* Riduci il padding */
+    }
+    
+    .title-section {
+        margin-top: 4rem; /* Sposta il titolo verso il basso per evitare che sia coperto */
+    }
+    
+    .title-section h1 {
+        font-size: 1.75rem; /* Riduci la dimensione del titolo */
+    }
+
     #calendar {
-        width: 100%;
+        width: 90%; /* Riduci la larghezza al 90% per schermi più piccoli */
         font-size: 0.9rem; /* Riduci la dimensione del testo */
     }
 
     .modal-content {
-        width: 70%; /* Modale più piccolo sui dispositivi mobili */
+        width: 95%; /* Adatta il modale alla larghezza dello schermo */
+        padding: 1rem; /* Riduci il padding */
     }
 
     .form-group {
-        max-width: 100%;
+        max-width: 100%; /* Adatta i campi del form alla larghezza */
+        margin-bottom: 1rem; /* Aggiungi spazio tra i campi */
+    }
+
+    .form-group label {
+        font-size: 1rem; /* Aumenta leggermente la dimensione del testo */
+    }
+
+    input, select {
+        font-size: 1rem; /* Aumenta la dimensione del testo nei campi */
+        padding: 0.75rem; /* Aumenta il padding per una migliore usabilità */
     }
 
     button {
-        font-size: 0.9rem; /* Riduci la dimensione del testo nei pulsanti */
-        padding: 8px 12px; /* Riduci il padding */
+        font-size: 1rem; /* Aumenta la dimensione del testo del pulsante */
+        padding: 0.75rem 1.5rem; /* Aumenta il padding del pulsante */
     }
 
     .checkbox-container {
-        flex-wrap: wrap; /* Permette di andare a capo su schermi piccoli */
+        flex-direction: column; /* Disposizione verticale per i checkbox */
+        gap: 0.5rem; /* Aggiungi spazio tra i checkbox */
     }
 
     .checkbox-container label {
-        min-width: 5rem; /* 80px */
+        font-size: 1rem; /* Aumenta la dimensione del testo dei checkbox */
+        padding: 0.75rem; /* Aumenta il padding per una migliore usabilità */
     }
 
-    .title-section h1 {
-        font-size: 1.5rem; /* 24px */
+    .fc-event {
+        font-size: 0.45rem; /* Riduci ulteriormente la dimensione del testo */
     }
 }
 
 @media (max-width: 480px) {
-
     .prenotazioni-container {
-        padding: 0.3125rem; /* 5px */
+        padding: 0.3125rem; /* Riduci ulteriormente il padding */
     }
 
     .title-section h1 {
-        font-size: 1.75rem; /* 28px */
-    }
-
-    .checkbox-container {
-        flex-direction: column; /* Disposizione verticale per schermi molto piccoli */
-        align-items: center;
-    }
-
-    .checkbox-container label {
-        width: 100%; /* Checkbox a larghezza piena */
-        text-align: center;
-    }
-
-    .modal-content {
-        width: 85%; /* Adatta il modale alla larghezza dello schermo */
+        font-size: 1.5rem; /* Riduci ulteriormente la dimensione del titolo */
     }
 
     #calendar {
+        width: 95%; /* Riduci ulteriormente la larghezza per schermi molto piccoli */
         font-size: 0.8rem; /* Riduci ulteriormente la dimensione del testo */
     }
 
-    
-    
+    .modal-content {
+        width: 100%; /* Usa tutta la larghezza disponibile */
+        padding: 0.75rem; /* Riduci ulteriormente il padding */
+    }
+
+    .form-group label {
+        font-size: 0.9rem; /* Riduci leggermente la dimensione del testo */
+    }
+
+    input, select {
+        font-size: 0.9rem; /* Riduci leggermente la dimensione del testo */
+        padding: 0.5rem; /* Riduci il padding */
+    }
+
+    button {
+        font-size: 0.9rem; /* Riduci leggermente la dimensione del testo */
+        padding: 0.5rem 1rem; /* Riduci il padding del pulsante */
+    }
+
+    .checkbox-container label {
+        font-size: 0.9rem; /* Riduci leggermente la dimensione del testo */
+        padding: 0.5rem; /* Riduci il padding */
+    }
+
+    .fc-event {
+        font-size: 0.35rem; /* Riduci ancora di più la dimensione del testo per schermi molto piccoli */
+    }
 }
 
 /* Media query per schermi molto piccoli (inferiori a 320px) */

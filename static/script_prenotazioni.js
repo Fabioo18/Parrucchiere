@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
             events: `/api/cliente_prenotazioni/${operatoreId}`, // Carica solo le prenotazioni dell'operatore selezionato
             eventColor: "#FF0000",
             eventTextColor: "white",
+            aspectRatio: window.innerWidth < 768 ? 1 : 1.35,
 
             headerToolbar: {
                 left: 'prev,next today', // Pulsanti di navigazione a sinistra
