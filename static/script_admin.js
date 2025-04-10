@@ -6,6 +6,15 @@ document.addEventListener('DOMContentLoaded', function () {
         selectable: true,
         editable: false,
         events: '/api/prenotazioni',
+        contentHeight: 'auto', // Adatta l'altezza del contenuto
+        aspectRatio: window.innerWidth < 768 ? 2.5 : 1.35,
+
+        headerToolbar: {
+            left: 'prev,next today', // Pulsanti di navigazione a sinistra
+            right: 'title',         // Titolo (mese e anno) al centro
+            center: ''                // Nessun pulsante a destra
+        },
+
         eventClick: function(info) {
             var eventId = info.event.id;
             showEventDetail(eventId);

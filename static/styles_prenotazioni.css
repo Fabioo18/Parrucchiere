@@ -237,10 +237,10 @@ button:hover {
     }
 
     #calendar {
-        width: 90%; /* Riduci la larghezza al 90% per schermi più piccoli */
-        font-size: 0.9rem; /* Riduci la dimensione del testo */
+        width: 100%; /* Usa tutta la larghezza disponibile */
+        font-size: 0.9rem; /* Riduci leggermente la dimensione del testo */
+        margin: 0 auto;
     }
-
     .modal-content {
         width: 95%; /* Adatta il modale alla larghezza dello schermo */
         padding: 1rem; /* Riduci il padding */
@@ -276,7 +276,7 @@ button:hover {
     }
 
     .fc-event {
-        font-size: 0.45rem; /* Riduci ulteriormente la dimensione del testo */
+        font-size: 0.58rem; /* Riduci ulteriormente la dimensione del testo */
     }
 }
 
