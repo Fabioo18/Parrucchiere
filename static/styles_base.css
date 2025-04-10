@@ -13,6 +13,10 @@
 }
 
 /* Reset e stili di base */
+* {
+    box-sizing: border-box; /* Include padding e bordi nella larghezza */
+}
+
 body {
     padding-top: 4.5rem; /* Altezza della barra di navigazione */
     margin: 0;
@@ -32,7 +36,7 @@ main {
 .header-strip {
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.8));
     backdrop-filter: blur(10px);
-    width: 100vw;
+    width: 100%;
     position: fixed;
     top: 0;
     left: 0;
@@ -78,6 +82,7 @@ main {
     gap: 2rem;
     margin: 0;
     padding: 0;
+    width: 100%;
 }
 
 .header-nav ul li a {
@@ -246,6 +251,7 @@ footer {
     transform: scale(1.2);
 }
 
+
 /* Media query per schermi medi (tablet) */
 @media (max-width: 1024px) {
     .header-title {
@@ -333,6 +339,19 @@ footer {
 
     footer {
         font-size: 0.9rem; /* Riduci la dimensione del testo nel footer */
+    }
+
+    .servizi-container {
+        flex-direction: column; 
+        align-items: center; 
+        gap: 1rem; 
+        padding: 1rem;
+    }
+
+    .servizio-card {
+        width: 100%; 
+        max-width: 400px; 
+        margin: 0.5rem 0; 
     }
 }
 
