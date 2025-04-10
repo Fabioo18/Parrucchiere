@@ -111,6 +111,74 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
                 });
 
+            },
+
+            // Quando clicchi su un evento (orario occupato)
+            eventClick: function(info) {
+                console.log("Hai cliccato su un evento:", info.event);
+            
+                // Simula il comportamento di dateClick
+                const oggi = new Date();
+                oggi.setHours(0, 0, 0, 0); // Azzeriamo ore/minuti
+                const dataSelezionata = new Date(info.event.startStr.split("T")[0]);
+            
+                // Blocco per date passate
+                if (dataSelezionata < oggi) {
+                    Swal.fire({
+                        title: 'Errore',
+                        text: "Non è possibile selezionare una data passata.",
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+            
+                // Blocco per domenica o lunedì
+                if (dataSelezionata.getDay() === 0 || dataSelezionata.getDay() === 1) {
+                    Swal.fire({
+                        title: 'Errore',
+                        text: "Questo giorno non è disponibile per le prenotazioni.",
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+            
+                // Recupera gli orari disponibili per la data selezionata e operatore
+                fetch(`/api/orari_disponibili_operatore/${operatoreId}/${info.event.startStr.split("T")[0]}`)
+                    .then(response => response.json())
+                    .then(orari => {
+                        console.log("Orari disponibili:", orari);
+            
+                        if (orari.length === 0) {
+                            Swal.fire({
+                                title: 'Nessun orario disponibile',
+                                text: "Non ci sono orari prenotabili disponibili per oggi.",
+                                icon: 'info',
+                                confirmButtonText: 'OK'
+                            });
+                        } else {
+                            dataInput.value = info.event.startStr.split("T")[0];
+                            modal.style.display = "block";
+            
+                            orarioSelect.innerHTML = "";
+                            orari.forEach(orario => {
+                                var option = document.createElement("option");
+                                option.value = orario;
+                                option.text = orario;
+                                orarioSelect.appendChild(option);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Errore nel recupero degli orari:", error);
+                        Swal.fire({
+                            title: 'Errore',
+                            text: "Si è verificato un errore nel recupero degli orari.",
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    });
             }
         });
 
