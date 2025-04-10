@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles_contatti.css') }}">
+{% endblock %}
+
+{% block content %}
+<main class="container">
+    <h1>Contattaci</h1>
+    <p>Hai domande? Compila il modulo sottostante o contattaci direttamente!</p>
+    <form id="contact-form">
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <label for="message">Messaggio:</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+        
+        <button type="submit">Invia</button>
+    </form>
+</main>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='script_contatti.js') }}"></script>
+{% endblock %}

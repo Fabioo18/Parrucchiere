@@ -14,9 +14,9 @@
 
 /* Reset e stili di base */
 body {
-    font-family: 'Roboto', sans-serif;
+    padding-top: 4.5rem; /* Altezza della barra di navigazione */
     margin: 0;
-    padding: 0;
+    font-family: 'Roboto', sans-serif;
     display: flex;
     flex-direction: column;
     min-height: 100vh; /* Assicura che il body occupi almeno l'altezza della finestra */
@@ -27,96 +27,84 @@ main {
     flex: 1; /* Fa sì che il contenuto principale occupi lo spazio disponibile */
 }
 
-/* Navbar responsive */
-.hamburger {
-    display: none;
-    cursor: pointer;
-}
-
-.hamburger div {
-    width: 1.5625rem; /* 25px */
-    height: 0.1875rem; /* 3px */
-    background-color: white;
-    margin: 0.3125rem; /* 5px */
-}
-
-/* Barra di navigazione - Trasparente con sfocatura */
+/* Barra di navigazione */
 .header-strip {
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));
-    backdrop-filter: blur(0.625rem);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.8));
+    backdrop-filter: blur(10px);
     width: 100%;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    z-index: 10;
-    padding: 0.625rem 0;
-    transition: background-color 0.3s ease;
-    box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
-}
-
-
-.header-title {
-    position: absolute;
-    top: 50%;
-    left: 23%;
-    transform: translate(-50%, -50%);
+    z-index: 1000;
+    padding: 0.75rem 1.5rem;
     display: flex;
-    flex-direction: column; /* Se vuoi titolo sopra e logo sotto o viceversa */
+    justify-content: space-between;
     align-items: center;
-    z-index: 10;
-    text-align: center;
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1rem, 4vw, 2rem); /* Ridotto il font size per essere più contenuto */
-    color: white;
-    text-shadow: 0.125rem 0.125rem 0.5rem rgba(0, 0, 0, 0.6); /* 2px 2px 8px */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* Animazione del logo */
-.header-logo img {
-    max-width: 6.25rem; /* 100px */
+.header-container {
     display: flex;
-    padding-left: 1.25rem; /* 20px */
-    justify-content: flex-start;
-    transition: transform 0.3s ease, filter 0.3s ease;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-logo img {
+    max-width: 100px;
+    transition: transform 0.3s ease;
 }
 
 .header-logo img:hover {
-    transform: scale(1.1); /* Ingrandimento del logo */
-    filter: brightness(1.2); /* Aumenta la luminosità quando il logo è sotto hover */
+    transform: scale(1.1);
 }
 
-/* Barra di navigazione */
+.header-title h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--oro);
+    margin: 0;
+    text-align: center;
+}
+
 .header-nav ul {
     list-style: none;
     display: flex;
-    justify-content: flex-end;
+    gap: 2rem;
     margin: 0;
     padding: 0;
 }
 
-.header-nav ul li {
-    margin: 0 1rem; 
-}
-
 .header-nav ul li a {
     color: white;
-    font-size: clamp(0.8rem, 1.2vw, 1rem);
-    font-weight: bold;
+    font-size: 1rem;
     text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 0.0625rem; /* 1px */
-    transition: color 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
-    padding: 0.3125rem 0; /* 5px */
+    font-weight: 500;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .header-nav ul li a:hover {
-    color: var(--oro); /* Cambia il colore del testo */
-    background-color: rgba(255, 255, 255, 0.2); /* Aggiunge un'ombra sottile dietro il link */
-    border-radius: 0.3125rem; /* 5px */
-    transform: scale(1.1); /* Leggero ingrandimento al passaggio del mouse */
+    color: var(--oro);
+    transform: scale(1.1);
 }
 
-/* Header - Immagine di sfondo con effetto parallax */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.hamburger div {
+    width: 30px;
+    height: 3px;
+    background-color: white;
+    border-radius: 2px;
+}
+
+/* Header - Immagine di sfondo con effetto parallax 
 header {
     position: relative;
     background-size: cover;
@@ -131,8 +119,9 @@ header {
     background-attachment: fixed;
     transition: background-position 0.2s ease;
     padding-top: 3.125rem;
-}
+*/
 
+/* 
 header::after {
     content: "";
     position: absolute;
@@ -140,9 +129,9 @@ header::after {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5); /* Sovrapposizione semitrasparente */
+    background: rgba(0, 0, 0, 0.5); /* Sovrapposizione semitrasparente 
     z-index: 1;
-}
+} */
 
 /* Contenuto sotto la barra di navigazione */
 .header-content {
@@ -178,15 +167,78 @@ header::after {
 footer {
     background-color: var(--nero);
     color: var(--bianco);
+    padding: 2rem 1rem;
     text-align: center;
-    padding: 0.625rem 0;
-    font-size: clamp(0.75rem, 2vw, 1rem);
-    width: 100%;
 }
 
-img {
-    max-width: 100%;
-    height: auto;
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 200px;
+}
+
+.footer-section h3 {
+    font-size: 1.2rem;
+    color: var(--oro);
+    margin-bottom: 1rem;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-section ul li a {
+    color: var(--bianco);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+    color: var(--oro);
+}
+
+.footer-bottom {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: var(--grigio);
+}
+
+/* Stile per i link ai social media */
+.social-links {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.social-links li {
+    margin: 0;
+}
+
+.social-links li a {
+    color: var(--bianco);
+    text-decoration: none;
+    font-size: 1.5rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-links li a:hover {
+    color: var(--oro);
+    transform: scale(1.2);
 }
 
 /* Media query per schermi medi (tablet) */
@@ -232,12 +284,12 @@ img {
     .header-nav ul {
         display: none;
         flex-direction: column;
-        align-items: center;
-        background-color: rgba(0, 0, 0, 0.8);
+        background-color: rgba(0, 0, 0, 0.9);
         position: absolute;
-        top: 3.125rem;
+        top: 60px;
         right: 0;
         width: 100%;
+        padding: 1rem 0;
     }
 
     .header-nav ul.show {
@@ -245,7 +297,7 @@ img {
     }
 
     .hamburger {
-        display: block;
+        display: flex;
     }
 
     .header-nav ul li {
@@ -265,11 +317,15 @@ img {
         font-size: clamp(0.9rem, 3vw, 1rem);
     }
 
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
     footer {
         font-size: 0.9rem; /* Riduci la dimensione del testo nel footer */
     }
 }
-
 
 /* Media query per schermi molto piccoli (schermi inferiori a 480px) */
 @media (max-width: 480px) {
