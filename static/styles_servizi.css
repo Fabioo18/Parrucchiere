@@ -1,0 +1,26 @@
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+.price-list {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+}
+
+.price-list th, .price-list td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.price-list th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.price-list tr:nth-child(even) {
+    background-color: #f2f2f2;
+}

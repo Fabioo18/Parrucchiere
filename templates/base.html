@@ -1,56 +1,92 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    {% block head %}{% endblock %}  <!-- Inserisci il contenuto dell'head qui -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles_base.css') }}"> <!-- Aggiungi il CSS di base -->
+    {% block head %}{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles_base.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
+    <!-- Barra di navigazione -->
     <header>
         <div class="header-strip">
             <div class="header-container">
-                <!-- Logo a sinistra -->
+                <!-- Logo -->
                 <div class="header-logo">
-                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+                    <a href="{{ url_for('index') }}">
+                        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+                    </a>
                 </div>
+                <!-- Titolo -->
                 <div class="header-title">
                     <h1>HairStyle</h1>
                 </div>
-                <!-- Navigazione a destra -->
+                <!-- Navigazione -->
                 <nav class="header-nav">
                     <ul>
                         <li><a href="{{ url_for('index') }}">Home</a></li>
-                        {% if not (current_user.is_authenticated and (current_user.role == 'parrucchiere' or current_user.role == 'operatore')) %}
-                        <li><a href="#">Chi Siamo</a></li>
-                        <li><a href="#">Contatti</a></li>
-                        {% endif %}
-                        {% if current_user.is_authenticated and (current_user.role == 'parrucchiere' or current_user.role == 'operatore') %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('admin_prenotazioni') }}">Prenotazioni</a>
-                        </li>
-                        {% endif %}
+                        <li><a href="{{ url_for('chi_siamo') }}">Chi Siamo</a></li>
+                        <li><a href="{{ url_for('servizi') }}">Servizi</a></li>
+                        <li><a href="{{ url_for('contatti') }}">Contatti</a></li>
                         {% if current_user.is_authenticated %}
-                        <li><a href="{{ url_for('logout') }}">Logout ({{ current_user.name }})</a></li>
+                            {% if current_user.role in ['parrucchiere', 'operatore'] %}
+                                <li><a href="{{ url_for('admin_prenotazioni') }}">Prenotazioni</a></li>
+                            {% endif %}
+                            <li><a href="{{ url_for('logout') }}">Logout ({{ current_user.name }})</a></li>
                         {% else %}
-                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                            <li><a href="{{ url_for('login') }}">Login</a></li>
                         {% endif %}
                     </ul>
                 </nav>
+                <!-- Hamburger menu per dispositivi mobili -->
+                <div class="hamburger">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Sezione contenuti variabili -->
+    <!-- Contenuto principale -->
     <main>
         {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2025 Parrucchiere Elegante | Tutti i diritti riservati</p>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Seguici</h3>
+                <ul class="social-links">
+                    <li><a href="https://www.facebook.com/tuoprofilo" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                    <li><a href="https://www.instagram.com/tuoprofilo" target="_blank"><i class="fab fa-instagram"></i></a></li>
+                    <li><a href="https://www.tiktok.com/tuoprofilo" target="_blank"><i class="fab fa-tiktok"></i></a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Link Utili</h3>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="#chi-siamo">Chi Siamo</a></li>
+                    <li><a href="#servizi">Servizi</a></li>
+                    <li><a href="#contatti">Contatti</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contatti</h3>
+                <p>Email: info@hairstyle.com</p>
+                <p>Telefono: +39 123 456 7890</p>
+                <p>Indirizzo: Via Roma, 123, Milano</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 HairStyle | Tutti i diritti riservati</p>
+        </div>
     </footer>
 
+    <script src="{{ url_for('static', filename='script_base.js') }}"></script>
 </body>
 </html>

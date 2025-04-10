@@ -25,6 +25,7 @@ app.secret_key = 'supersecretkey'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
+
 # Configurazione Flask-Login
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -770,6 +771,21 @@ def reset_password(token):
             return jsonify({'success': False, 'error': 'Utente non trovato.'})
 
     return render_template('reset_password.html', token=token)
+
+# Rotta per la pagina Chi Siamo
+@app.route('/chi-siamo')
+def chi_siamo():
+    return render_template('chisiamo.html')
+
+# Rotta per la pagina Servizi
+@app.route('/servizi')
+def servizi():
+    return render_template('servizi.html')
+
+# Rotta per la pagina Contatti
+@app.route('/contatti')
+def contatti():
+    return render_template('contatti.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
