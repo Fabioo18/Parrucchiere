@@ -1,24 +1,83 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles_chi_siamo.css') }}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chi siamo</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles_chi_siamo.css') }}">
+<script defer src="{{ url_for('static', filename='script_chi_siamo.js') }}"></script>
 {% endblock %}
 
 {% block content %}
-<main class="container">
-    <h1>Chi Siamo</h1>
-    <p>Benvenuti da HairStyle! Siamo un team di professionisti dedicati alla cura dei tuoi capelli.</p>
-    <div class="team">
-        <div class="member">
-            <img src="{{ url_for('static', filename='team1.jpg') }}" alt="Team Member 1">
-            <h3>Mario Rossi</h3>
-            <p>Parrucchiere esperto</p>
+<main>
+    <section class="chi-siamo-header">
+        <h1>Chi Siamo</h1>
+    </section>
+<div class="container">
+    <div class="card">
+        <div class="content">
+            <div class="imgBx">
+                <img src="{{ url_for('static', filename='team2.jpg') }}" alt="Monica Helleona - Branding & Strategy">
+            </div>
+            <div class="contentBx">
+                <h3>Monica Helleona<br><span>Branding & Strategy</span></h3>
+            </div>
         </div>
-        <div class="member">
-            <img src="{{ url_for('static', filename='team2.jpg') }}" alt="Team Member 2">
-            <h3>Luigi Bianchi</h3>
-            <p>Specialista in colorazione</p>
-        </div>
+        <ul class="sci">
+            <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+            <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
+            <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+        </ul>
     </div>
+
+    <div class="card">
+        <div class="content">
+            <div class="imgBx">
+                <img src="{{ url_for('static', filename='team2.jpg') }}" alt="Kennifer Monalica - Video Editor">
+            </div>
+            <div class="contentBx">
+                <h3>Kennifer Monalica<br><span>Video Editor</span></h3>
+            </div>
+        </div>
+        <ul class="sci">
+            <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+            <li><a href="#"><i class="fa-brands fa-tiktok"></i></a></li>
+            <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="content">
+            <div class="imgBx">
+                <img src="{{ url_for('static', filename='team2.jpg') }}" alt="Frederick Jordan - Animator">
+            </div>
+            <div class="contentBx">
+                <h3>Frederick Jordan<br><span>Animator</span></h3>
+            </div>
+        </div>
+        <ul class="sci">
+            <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+            <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
+            <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="content">
+            <div class="imgBx">
+                <img src="{{ url_for('static', filename='team2.jpg') }}" alt="Lolita Mesinlo - Illustrator">
+            </div>
+            <div class="contentBx">
+                <h3>Lolita Mesinlo<br><span>Illustrator</span></h3>
+            </div>
+        </div>
+        <ul class="sci">
+            <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+            <li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
+            <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+        </ul>
+    </div>
+</div>
 </main>
 {% endblock %}
